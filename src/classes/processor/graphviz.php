@@ -92,9 +92,14 @@ class plGraphvizProcessor extends plProcessor
         }
 
         $functions = array();
-        foreach( $o->functions as $function ) 
-        {
-            $functions[] = $this->getModifierRepresentation( $function->modifier ) . $function->name . $this->getParamRepresentation( $function->params );
+        foreach( $o->functions as $function ) {
+            if (strtolower($function->name) === '__construct')
+            {
+                $paramsInView = [];
+            } else {
+                $paramsInView = $function->params;
+            }
+            $functions[] = $this->getModifierRepresentation( $function->modifier ) . $function->name . $this->getParamRepresentation( $paramsInView );
 
             // Association creation is optional
             if ( $this->options->createAssociations === false ) 
@@ -239,6 +244,7 @@ class plGraphvizProcessor extends plProcessor
         }
 
         $representation = '( ';
+        $lineLength = 0;
         for( $i = 0; $i<count( $params ); $i++ ) 
         {
             if ( $params[$i]->type !== null ) 
@@ -250,6 +256,12 @@ class plGraphvizProcessor extends plProcessor
             if ( $i < count( $params ) - 1 ) 
             {
                 $representation .= ', ';
+            }
+            
+            if (strlen($representation) - $lineLength > 30){
+                //newline each 2 line
+                $lineLength = strlen($representation);
+                $representation .= '<BR />';
             }
         }
         $representation .= ' )';
