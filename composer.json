@@ -6,9 +6,11 @@
   "autoload": {
     "psr-4": {
       "Phuml\\": "src"
-    }
-  },
-  "classmap": [
-    "src/classes"
-  ]
+    },
+    "classmap": [
+      "src/classes",
+      "src/interfaces",
+      "src/exceptions"
+    ]
+  }
 }
