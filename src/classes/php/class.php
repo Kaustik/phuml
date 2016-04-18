@@ -4,22 +4,57 @@ use Phuml\Generator\PhpProperty;
 
 class plPhpClass extends PhpProperty
 {
+    /**
+     * @var string
+     */
+    public $name;
+    
+    /**
+     * @var null|string
+     */
+    public $extends;
+
+    /**
+     * @var array
+     */
+    public $attributes;
+    
+    /**
+     * @var array
+     */
+    public $functions;
+    /**
+     * @var array
+     */
+    public $implements;
+    /**
+     * @var string
+     */
+    public $namespace;
+
+    /**
+     * @param string $name
+     * @param array $attributes
+     * @param array $functions
+     * @param array $implements
+     * @param string $extends
+     * @param string $namespace
+     */
     public function __construct(
         $name,
-        $attributes = array(),
-        $functions = array(),
-        $implements = array(),
+        $attributes = [],
+        $functions = [],
+        $implements = [],
         $extends = null,
         $namespace = ''
     ) {
-        $this->properties = array(
-            'name' => $name,
-            'attributes' => $attributes,
-            'functions' => $functions,
-            'implements' => $implements,
-            'extends' => $extends,
-            'namespace' => $namespace
-        );
+        
+        $this->name = $name;
+        $this->attributes = $attributes;
+        $this->extends = $extends;
+        $this->functions = $functions;
+        $this->implements = $implements;
+        $this->namespace = $namespace;
         $this->name = $this->getFormattedName();
     }
 }
