@@ -2,6 +2,7 @@
 
 class plStructureTokenparserGenerator extends plStructureGenerator 
 {
+    private $namespace = '\\';
     private $classes;
     private $interfaces;
 
@@ -151,6 +152,19 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                         case T_DOC_COMMENT:
                             $this->t_doc_comment( $token );
                         break;
+                        
+                        case T_NAMESPACE:
+                            $this->t_namespace( $token );
+                        break;
+                        
+                        case T_NS_SEPARATOR:
+                            $this->t_string( $token );
+                        break;
+                        
+                        #case T_USE:
+                        #    $this->t_doc_comment( $token );
+                        #break;
+
 
                         default:
                             // Ignore everything else
@@ -177,6 +191,9 @@ class plStructureTokenparserGenerator extends plStructureGenerator
     {
         // Reset typehints on each comma
         $this->parserStruct['typehint'] = null;
+        if( $this->lastToken == T_NAMESPACE ){
+            $this->lastToken = null;
+       }
     }
 
     private function opening_bracket() 
@@ -350,6 +367,10 @@ class plStructureTokenparserGenerator extends plStructureGenerator
     {
         switch( $this->lastToken ) 
         {
+            case T_NAMESPACE:
+                // Record the document's namespace
+                $this->namespace .= $token[1];
+                break;
             case T_IMPLEMENTS:
                 // Add interface to implements array
                 $this->parserStruct['implements'][] = $token[1];
@@ -506,6 +527,18 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 $this->parserStruct['docblock'] = null;
         }
     }
+    
+    
+    private function t_namespace( $token ) 
+    {
+        switch ( $this->lastToken ) 
+        {
+            case null:
+                $this->lastToken = $token[0];break;
+            default:
+                $this->lastToken = null;
+        }
+    }
 
     private function storeClassOrInterface() 
     {
@@ -533,7 +566,8 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             $interface = new plPhpInterface( 
                 $this->parserStruct['interface'],
                 $functions,
-                $this->parserStruct['extends']
+                $this->parserStruct['extends'],
+                $this->namespace
             );                              
             
             // Store in the global interface array
@@ -589,7 +623,8 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 $attributes,
                 $functions,
                 $this->parserStruct['implements'],
-                $this->parserStruct['extends']
+                $this->parserStruct['extends'],
+                $this->namespace
             );                              
             
             $this->classes[$this->parserStruct['class']] = $class;
