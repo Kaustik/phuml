@@ -1,0 +1,14 @@
+{
+  "name": "PhUML",
+  "type": "System",
+  "description": "Composer file for PhUML.",
+  "license": "mit?",
+  "autoload": {
+    "psr-4": {
+      "Phuml\\": "src"
+    }
+  },
+  "classmap": [
+    "src/classes"
+  ]
+}
