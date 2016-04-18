@@ -23,4 +23,10 @@ class PhpProperty
         }
         $this->properties[$key] = $val;
     }
+
+    public function getFormattedName(){
+        $ns = $this->namespace;
+        $ns = str_replace('\\','\\\\',$ns);
+        return $ns.$this->name;
+    }
 }

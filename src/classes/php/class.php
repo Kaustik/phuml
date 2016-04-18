@@ -9,7 +9,8 @@ class plPhpClass extends PhpProperty
         $attributes = array(),
         $functions = array(),
         $implements = array(),
-        $extends = null
+        $extends = null,
+        $namespace = ''
     ) {
         $this->properties = array(
             'name' => $name,
@@ -17,6 +18,8 @@ class plPhpClass extends PhpProperty
             'functions' => $functions,
             'implements' => $implements,
             'extends' => $extends,
+            'namespace' => $namespace
         );
+        $this->name = $this->getFormattedName();
     }
 }
