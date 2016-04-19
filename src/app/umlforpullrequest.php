@@ -5,12 +5,13 @@ require_once dirname(__FILE__).'/../config/config.php';
 /**
  * @param int $pullrequestId
  * @param int $page 1 and increaseing
+ * @param string $token
  * @return array|string[] empty array if no files on page
  */
-function getAffectedFilesForPullrequestAndPage($pullrequestId, $page)
+function getAffectedFilesForPullrequestAndPage($pullrequestId, $page, $token)
 {
     // -I get only headers
-    $cmd = "curl -H 'Authorization: token cd1bc496b8d4c2d145e68ebab0d7233fde35660d' ".
+    $cmd = "curl -H 'Authorization: token $token' ".
     "https://api.github.com/repos/kaustik/aiai/pulls/{$pullrequestId}/files?page={$page}";
     $jsonResult = `$cmd`;
 
@@ -41,13 +42,19 @@ function generate($argv)
     } else {
         $type = '';
     }
+    if (isset($argv[3])) {
+        $token = $argv[3]; //test or user or empty string
+    } else {
+        echo "github token must be set";
+        exit;
+    }
     
     $page = 1;
-    $files = getAffectedFilesForPullrequestAndPage($pullrequestId, $page);
+    $files = getAffectedFilesForPullrequestAndPage($pullrequestId, $page, $token);
     $allFiles = $files;
     while (count($files) > 0) {
         $page++;
-        $files = getAffectedFilesForPullrequestAndPage($pullrequestId, $page);
+        $files = getAffectedFilesForPullrequestAndPage($pullrequestId, $page, $token);
         $allFiles = array_merge($allFiles, $files);
     }
     
