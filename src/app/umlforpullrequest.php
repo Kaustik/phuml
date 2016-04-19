@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-require_once dirname(__FILE__).'/../config/config.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 /**
  * @param int $pullrequestId
@@ -63,11 +63,11 @@ function generate($argv)
             continue;
         }
 
-        if (substr($file, -8, 8) == 'User.php') {
-            #continue;
+        if (substr($file, -8, 8) == 'User.php' && $type == 'test') {
+            continue;
         }
 
-        if (substr($file, -8, 8) == 'Test.php') {
+        if (substr($file, -8, 8) == 'Test.php' && $type == 'user') {
             continue;
         }
         $phuml->addFile('/srv/aiai/current/'.$file);
