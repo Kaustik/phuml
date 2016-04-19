@@ -7,7 +7,7 @@ class PhpProperty
 
     public function getFormattedName(){
         $namespace = $this->namespace;
-        if (!empty($namespace)) {
+        if (!empty($namespace) && strlen($namespace) > 1) {
             $namespace .= '\\';
         }
         $namespace = str_replace('\\','\\\\',$namespace);
