@@ -43,7 +43,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
 
     private function initNamespace()
     {
-        $this->namespace = '\\';
+        $this->namespace = T_NS_SEPARATOR.T_NS_SEPARATOR;
     }
 
     public function createStructure(array $files)
@@ -361,7 +361,9 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 break;
             case T_IMPLEMENTS:
                 // Add interface to implements array
-                $this->parserStruct['implements'][] = $token[1];
+                if ($token[0] != T_NS_SEPARATOR) {
+                    $this->parserStruct['implements'][] = $token[1];
+                }
                 // We do not reset the last token here, because 
                 // there might be multiple interfaces
             break;
