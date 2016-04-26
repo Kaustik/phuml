@@ -31,21 +31,28 @@ function getAffectedFilesForPullrequestAndPage($pullrequestId, $page, $token)
 }
 
 
-function generate($argv)
+function generate()
 {
     $phuml = new plPhuml();
     $phuml->generator = plStructureGenerator::factory('tokenparser');
-    $pullrequestId = $argv[1];
+    $options = getopt('t:p:f:'); //token pullrequestid filter
 
-    if (isset($argv[2])) {
-        $type = $argv[2]; //test or user or empty string
+    if (isset($options['f'])) {
+        $type = $options['f']; //test or user or empty string
     } else {
         $type = '';
     }
-    if (isset($argv[3])) {
-        $token = $argv[3]; //test or user or empty string
+    if (isset($options['t'])) {
+        $token = $options['t'];
     } else {
         echo "github token must be set";
+        exit;
+    }
+
+    if (isset($options['p'])) {
+        $pullrequestId = $options['p'];
+    } else {
+        echo "pullrequestid token must be set";
         exit;
     }
     
@@ -79,4 +86,4 @@ function generate($argv)
     $phuml->generate('/srv/aiai/current/log/uml.png');
 }
 
-generate($argv);
+generate();
