@@ -1,5 +1,7 @@
 <?php
 
+use Phuml\Generator\UseStatement;
+
 class plStructureTokenparserGenerator extends plStructureGenerator
 {
     private $namespace;
@@ -8,6 +10,12 @@ class plStructureTokenparserGenerator extends plStructureGenerator
 
     private $parserStruct;
     private $lastToken;
+
+
+    /**
+     * @var UseStatement
+     */
+    private $currentUse;
 
     public function __construct()
     {
@@ -36,6 +44,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             'extends' => null,
             'modifier' => 'public',
             'docblock' => null,
+            'use' => []
         );
 
         $this->lastToken = array();
@@ -43,7 +52,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
 
     private function initNamespace()
     {
-        $this->namespace = T_NS_SEPARATOR.T_NS_SEPARATOR;
+        $this->namespace = '\\';
     }
 
     public function createStructure(array $files)
@@ -74,6 +83,13 @@ class plStructureTokenparserGenerator extends plStructureGenerator
 
                         case '=':
                             $this->equal_sign();
+                            break;
+                        case ';':
+                            if ($this->currentUse instanceof UseStatement) {
+                                $this->parserStruct['use'][$this->currentUse->name] = $this->currentUse;
+                                $this->currentUse = null;
+                            }
+                            $this->lastToken = null;
                             break;
                         default:
                             // Ignore everything else
@@ -160,11 +176,10 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                         case T_NS_SEPARATOR:
                             $this->t_string($token);
                             break;
-
-                        #case T_USE:
-                        #    $this->t_doc_comment( $token );
-                        #break;
-
+                        
+                        case T_USE:
+                            $this->t_use($token);
+                            break;
                         default:
                             // Ignore everything else
                             $this->lastToken = null;
@@ -362,7 +377,12 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             case T_IMPLEMENTS:
                 // Add interface to implements array
                 if ($token[0] != T_NS_SEPARATOR) {
-                    $this->parserStruct['implements'][] = $token[1];
+                    if (isset($this->parserStruct['use'][$token[1]])) {
+                        $name = $this->parserStruct['use'][$token[1]]->path;
+                    } else {
+                        $name = $token[1];
+                    }
+                    $this->parserStruct['implements'][] = $name;
                 }
                 // We do not reset the last token here, because 
                 // there might be multiple interfaces
@@ -396,6 +416,10 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 // Reset the last Token
                 $this->lastToken = null;
             break;
+            case T_USE:
+                $this->currentUse->path .= $token[1];
+                $this->currentUse->name = $token[1];
+                break;
             default:
                 $this->lastToken = null;
         }
@@ -511,7 +535,20 @@ class plStructureTokenparserGenerator extends plStructureGenerator
     {
         switch ($this->lastToken) {
             case null:
-                $this->lastToken = $token[0];break;
+                $this->lastToken = $token[0];
+                break;
+            default:
+                $this->lastToken = null;
+        }
+    }
+
+    private function t_use($token)
+    {
+        switch ($this->lastToken) {
+            case null:
+                $this->lastToken = $token[0];
+                $this->currentUse = new UseStatement();
+                break;
             default:
                 $this->lastToken = null;
         }
@@ -546,6 +583,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
 
             // Store in the global interface array
             $this->interfaces[$this->parserStruct['interface']] = $interface;
+            $this->initParserAttributes();
         }
         // If there is no interface, we maybe need to store a class
         elseif ($this->parserStruct['class'] !== null) {
@@ -594,9 +632,9 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             );
 
             $this->classes[$this->parserStruct['class']] = $class;
+            $this->initParserAttributes();
         }
 
-        $this->initParserAttributes();
     }
 
     private function fixObjectConnections()
