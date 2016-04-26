@@ -2,7 +2,7 @@
 
 class plStructureTokenparserGenerator extends plStructureGenerator
 {
-    private $namespace = '\\';
+    private $namespace;
     private $classes;
     private $interfaces;
 
@@ -13,6 +13,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
     {
         $this->initGlobalAttributes();
         $this->initParserAttributes();
+        $this->initNamespace();
     }
 
     private function initGlobalAttributes()
@@ -40,12 +41,18 @@ class plStructureTokenparserGenerator extends plStructureGenerator
         $this->lastToken = array();
     }
 
+    private function initNamespace()
+    {
+        $this->namespace = '\\';
+    }
+
     public function createStructure(array $files)
     {
         $this->initGlobalAttributes();
 
         foreach ($files as $file) {
             $this->initParserAttributes();
+            $this->initNamespace();
             $tokens = token_get_all(file_get_contents($file));
 
             // Loop through all tokens
