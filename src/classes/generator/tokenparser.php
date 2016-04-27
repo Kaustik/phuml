@@ -55,6 +55,10 @@ class plStructureTokenparserGenerator extends plStructureGenerator
         $this->namespace = '\\';
     }
 
+    /**
+     * @param array $files
+     * @return array
+     */
     public function createStructure(array $files)
     {
         $this->initGlobalAttributes();
@@ -582,7 +586,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             );
 
             // Store in the global interface array
-            $this->interfaces[$this->parserStruct['interface']] = $interface;
+            $this->interfaces[$interface->name] = $interface;
             $this->initParserAttributes();
         }
         // If there is no interface, we maybe need to store a class
@@ -631,7 +635,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 $this->namespace
             );
 
-            $this->classes[$this->parserStruct['class']] = $class;
+            $this->classes[$class->name] = $class;
             $this->initParserAttributes();
         }
 
