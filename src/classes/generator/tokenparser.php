@@ -392,9 +392,14 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 // there might be multiple interfaces
             break;
             case T_EXTENDS:
-                // Set the superclass
-                $this->parserStruct['extends'] = $token[1];
-                // Reset the last token
+                if ($token[0] != T_NS_SEPARATOR) {
+                    if (isset($this->parserStruct['use'][$token[1]])) {
+                        $name = $this->parserStruct['use'][$token[1]]->path;
+                    } else {
+                        $name = $token[1];
+                    }
+                    $this->parserStruct['extends'] = $name;
+                }
                 $this->lastToken = null;
             break;
             case T_FUNCTION:
