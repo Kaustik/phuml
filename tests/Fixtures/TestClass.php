@@ -6,5 +6,4 @@ use Test\Fixtures\Interfaces\TestInterface;
 
 class TestClass implements TestInterface
 {
-
 }
