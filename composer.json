@@ -3,14 +3,21 @@
   "type": "System",
   "description": "Composer file for PhUML.",
   "license": "mit?",
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*"
+  },
   "autoload": {
     "psr-4": {
-      "Phuml\\": "src"
+      "Phuml\\": "src",
+      "Test\\": "tests"
     },
     "classmap": [
       "src/classes",
       "src/interfaces",
       "src/exceptions"
     ]
+  },
+  "config": {
+    "bin-dir": "bin"
   }
 }
