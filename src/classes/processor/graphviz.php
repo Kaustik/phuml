@@ -62,74 +62,14 @@ class plGraphvizProcessor extends plProcessor
 
         // First we need to create the needed data arrays
         $name = $o->name;
-        
-        $attributes = array();
-        $associations = array();
-        foreach( $o->attributes as $attribute ) 
-        {
-            $attributes[] = $this->getModifierRepresentation( $attribute->modifier ) . $attribute->name;
 
-            // Association creation is optional
-            if ( $this->options->createAssociations === false ) 
-            {
-                continue;
-            }
+        $attributes = $this->getAttributes($o);
+        $associations = $this->getAssociations($o);
+        $def .= $this->getAssociationDef($o, $associations);
 
-            // Create associations if the attribute type is set
-            if ( $attribute->type !== null && array_key_exists( $attribute->type, $this->structure ) && !array_key_exists( strtolower( $attribute->type ), $associations ) ) 
-            {
-                $def .= $this->createNodeRelation( 
-                    $this->getUniqueId( $this->structure[$attribute->type] ),
-                    $this->getUniqueId( $o ),
-                    array( 
-                        'dir'       => 'back',
-                        'arrowtail' => 'none',
-                        'style'     => 'dashed',
-                    )
-                );
-                $associations[strtolower( $attribute->type )] = true;
-            }
-        }
+        $functions = $this->getFunctionsFrom($o);
+        $def .= $this->getFunctionDef($o, $associations);
 
-        $functions = array();
-        foreach( $o->functions as $function ) {
-            if (strtolower($function->name) === '__construct')
-            {
-                $paramsInView = [];
-            } else {
-                $paramsInView = $function->params;
-            }
-            $functions[] = $this->getModifierRepresentation( $function->modifier ) . $function->name . $this->getParamRepresentation( $paramsInView );
-
-            // Association creation is optional
-            if ( $this->options->createAssociations === false ) 
-            {
-                continue;
-            }
-
-            // Create association if the function is the constructor and takes
-            // other classes as parameters
-            if ( strtolower( $function->name ) === '__construct' ) 
-            {
-                foreach( $function->params as $param ) 
-                {
-                    if ( $param->type !== null && array_key_exists( $param->type, $this->structure ) && !array_key_exists( strtolower( $param->type ), $associations ) ) 
-                    {
-                        $def .= $this->createNodeRelation( 
-                            $this->getUniqueId( $this->structure[$param->type] ),
-                            $this->getUniqueId( $o ),
-                            array( 
-                                'dir'       => 'back',
-                                'arrowtail' => 'none',
-                                'style'     => 'dashed',
-                            )
-                        );
-                        $associations[strtolower( $param->type )] = true;
-                    }
-                }
-            }
-        }
-        
         // Create the node
         $def .= $this->createNode( 
             $this->getUniqueId( $o ),
@@ -188,18 +128,16 @@ class plGraphvizProcessor extends plProcessor
 
         // First we need to create the needed data arrays
         $name = $o->name;
-        
-        $functions = array();
-        foreach( $o->functions as $function ) 
-        {
-            $functions[] = $this->getModifierRepresentation( $function->modifier ) . $function->name . $this->getParamRepresentation( $function->params );
-        }
-        
+
+        $associations = [];
+        $functions = $this->getFunctionsFrom($o);
+        $def .= $this->getFunctionDef($o, $associations);
+
         // Create the node
         $def .= $this->createNode( 
             $this->getUniqueId( $o ),
             array(
-                'label' => $this->createInterfaceLabel( $name, array(), $functions ),
+                'label' => $this->createInterfaceLabel( $name, $associations, $functions ),
                 'shape' => 'plaintext',
             )
         );
@@ -371,6 +309,117 @@ class plGraphvizProcessor extends plProcessor
 
         return $label;
     }
-}
 
-?>
+    /**
+     * @param $o
+     * @return array
+     */
+    private function getFunctionsFrom($o)
+    {
+        $functions = array();
+        foreach ($o->functions as $function) {
+            $functions[] = $this->getModifierRepresentation($function->modifier) . $function->name . $this->getParamRepresentation($function->params);
+        }
+        return $functions;
+    }
+
+    /**
+     * @param $o
+     * @param array $associations
+     * @return string
+     */
+    private function getFunctionDef($o, $associations)
+    {
+        $def = '';
+        foreach ($o->functions as $function) {
+
+            // Association creation is optional
+            if ($this->options->createAssociations === false) {
+                continue;
+            }
+
+            if ($function->name == '__construct') {
+                //other style
+            }
+            foreach ($function->params as $param) {
+                if ($param->type !== null && array_key_exists($param->type, $this->structure) && !array_key_exists(strtolower($param->type), $associations)) {
+                    $def .= $this->createNodeRelation(
+                        $this->getUniqueId($this->structure[$param->type]),
+                        $this->getUniqueId($o),
+                        array(
+                            'dir' => 'back',
+                            'arrowtail' => 'none',
+                            'style' => 'dashed',
+                        )
+                    );
+                    $associations[strtolower($param->type)] = true;
+                }
+            }
+        }
+        return $def;
+    }
+
+    /**
+     * @param $o
+     * @return array
+     */
+    private function getAttributes($o)
+    {
+        $attributes = array();
+        foreach ($o->attributes as $attribute) {
+            $attributes[] = $this->getModifierRepresentation($attribute->modifier) . $attribute->name;
+        }
+        return $attributes;
+    }
+
+    /**
+     * @param $o
+     * @param $associations
+     * @param $def
+     * @return string
+     */
+    private function getAssociationDef($o, $associations)
+    {
+        $def = '';
+        foreach ($o->attributes as $attribute) {
+            // Association creation is optional
+            if ($this->options->createAssociations === false) {
+                continue;
+            }
+
+            // Create associations if the attribute type is set
+            if ($attribute->type !== null && array_key_exists($attribute->type, $this->structure) && !array_key_exists(strtolower($attribute->type), $associations)) {
+                $def .= $this->createNodeRelation(
+                    $this->getUniqueId($this->structure[$attribute->type]),
+                    $this->getUniqueId($o),
+                    array(
+                        'dir' => 'back',
+                        'arrowtail' => 'none',
+                        'style' => 'dashed',
+                    )
+                );
+            }
+        }
+        return $def;
+    }
+
+    /**
+     * @param $o
+     * @return array
+     */
+    private function getAssociations($o)
+    {
+        $associations = array();
+        foreach ($o->attributes as $attribute) {
+            if ($this->options->createAssociations === false) {
+                continue;
+            }
+            if ($attribute->type !== null && array_key_exists($attribute->type, $this->structure) &&
+                !array_key_exists(strtolower($attribute->type), $associations)
+            ) {
+                $associations[strtolower($attribute->type)] = true;
+            }
+        }
+        return $associations;
+    }
+}
