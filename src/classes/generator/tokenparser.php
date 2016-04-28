@@ -23,7 +23,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
      * @var UseStatement
      */
     private $currentUse;
-
+    
     public function __construct()
     {
         $this->initGlobalAttributes();
@@ -46,6 +46,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             'attributes' => array(),
             'functions' => array(),
             'typehint' => null,
+            'returns' => [],
             'params' => array(),
             'implements' => array(),
             'extends' => null,
@@ -525,7 +526,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
         switch ($this->lastToken) {
             case null:
                 $this->parserStruct['docblock'] = $token[1];
-            break;
+                break;
             default:
                 $this->lastToken = null;
                 $this->parserStruct['docblock'] = null;
@@ -572,7 +573,8 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 $functions[] = new plPhpFunction(
                     $function[0],
                     $function[1],
-                    $params
+                    $params,
+                    $this->getReturnFromDocBlock($function[3])
                 );
             }
             $interface = new plPhpInterface(
@@ -602,7 +604,8 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 $functions[] = new plPhpFunction(
                     $function[0],
                     $function[1],
-                    $params
+                    $params,
+                    $this->getReturnFromDocBlock($function[3])
                 );
             }
             foreach ($this->parserStruct['attributes'] as $attribute) {
@@ -679,6 +682,25 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             $this->currentFullyQualifiedName .= $token[1];
             $name = $this->currentFullyQualifiedName;
             return $name;
+        }
+    }
+
+    /**
+     * @param $docBlock
+     * @return string|void
+     */
+    public function getReturnFromDocBlock($docBlock)
+    {
+        $matches = [];
+        preg_match('/.*@return (.*).*/', $docBlock, $matches);
+        if (isset($matches[1])) {
+            $class = $matches[1];
+            if (isset($this->parserStruct['use'][$class])) {
+                return $this->parserStruct['use'][$class]->path;
+            }
+            return $class;
+        } else {
+            return null;
         }
     }
 }

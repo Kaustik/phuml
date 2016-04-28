@@ -63,12 +63,13 @@ class plGraphvizProcessor extends plProcessor
         // First we need to create the needed data arrays
         $name = $o->name;
 
-        $attributes = $this->getAttributes($o);
-        $associations = $this->getAssociations($o);
-        $def .= $this->getAssociationDef($o, $associations);
+        $attributes = $this->getAttributesModifers($o);
+        $associations = $this->getAttributesAssociations($o);
+        $def .= $this->getAttributesAssociationDefinition($o, $associations);
 
-        $functions = $this->getFunctionsFrom($o);
-        $def .= $this->getFunctionDef($o, $associations);
+        $functions = $this->getFunctionsModifier($o);
+        $def .= $this->getParametersAssociationDefinition($o, $associations);
+        $def .= $this->getReturnAssociationDefinition($o, $associations);
 
         // Create the node
         $def .= $this->createNode( 
@@ -130,8 +131,8 @@ class plGraphvizProcessor extends plProcessor
         $name = $o->name;
 
         $associations = [];
-        $functions = $this->getFunctionsFrom($o);
-        $def .= $this->getFunctionDef($o, $associations);
+        $functions = $this->getFunctionsModifier($o);
+        $def .= $this->getParametersAssociationDefinition($o, $associations);
 
         // Create the node
         $def .= $this->createNode( 
@@ -314,11 +315,15 @@ class plGraphvizProcessor extends plProcessor
      * @param $o
      * @return array
      */
-    private function getFunctionsFrom($o)
+    private function getFunctionsModifier($o)
     {
         $functions = array();
         foreach ($o->functions as $function) {
-            $functions[] = $this->getModifierRepresentation($function->modifier) . $function->name . $this->getParamRepresentation($function->params);
+            $return = '';
+            if ($function->return) {
+                $return = ' : '.$function->return;
+            }
+            $functions[] = $this->getModifierRepresentation($function->modifier) . $function->name . $this->getParamRepresentation($function->params). $return;
         }
         return $functions;
     }
@@ -328,18 +333,12 @@ class plGraphvizProcessor extends plProcessor
      * @param array $associations
      * @return string
      */
-    private function getFunctionDef($o, $associations)
+    private function getParametersAssociationDefinition($o, $associations)
     {
         $def = '';
         foreach ($o->functions as $function) {
-
-            // Association creation is optional
             if ($this->options->createAssociations === false) {
                 continue;
-            }
-
-            if ($function->name == '__construct') {
-                //other style
             }
             foreach ($function->params as $param) {
                 if ($param->type !== null && array_key_exists($param->type, $this->structure) && !array_key_exists(strtolower($param->type), $associations)) {
@@ -361,9 +360,41 @@ class plGraphvizProcessor extends plProcessor
 
     /**
      * @param $o
+     * @param array $associations
+     * @return string
+     */
+    private function getReturnAssociationDefinition($o, $associations)
+    {
+        $def = '';
+        foreach ($o->functions as $function) {
+            if ($this->options->createAssociations === false) {
+                continue;
+            }
+            if ($function->return) {
+                if (array_key_exists($function->return, $this->structure) && !array_key_exists(strtolower($function->return), $associations)) {
+                    $def .= $this->createNodeRelation(
+                        $this->getUniqueId($this->structure[$function->return]),
+                        $this->getUniqueId($o),
+                        array(
+                            'dir' => 'back',
+                            'arrowtail' => 'none',
+                            'style' => 'dashed',
+                        )
+                    );
+                    $associations[strtolower($function->return)] = true;
+                }
+            }
+        }
+        return $def;
+    }
+    
+    
+
+    /**
+     * @param $o
      * @return array
      */
-    private function getAttributes($o)
+    private function getAttributesModifers($o)
     {
         $attributes = array();
         foreach ($o->attributes as $attribute) {
@@ -378,7 +409,7 @@ class plGraphvizProcessor extends plProcessor
      * @param $def
      * @return string
      */
-    private function getAssociationDef($o, $associations)
+    private function getAttributesAssociationDefinition($o, $associations)
     {
         $def = '';
         foreach ($o->attributes as $attribute) {
@@ -407,7 +438,7 @@ class plGraphvizProcessor extends plProcessor
      * @param $o
      * @return array
      */
-    private function getAssociations($o)
+    private function getAttributesAssociations($o)
     {
         $associations = array();
         foreach ($o->attributes as $attribute) {

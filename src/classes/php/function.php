@@ -4,12 +4,13 @@ class plPhpFunction
 {
     private $properties;
 
-    public function __construct( $name, $modifier = 'public', $params = array() ) 
+    public function __construct($name, $modifier = 'public', $params = array(), $return)  
     {
-        $this->properties = array( 
+        $this->properties = array(
             'name'      =>  $name,
             'modifier'  =>  $modifier,
             'params'    =>  $params,
+            'return'    =>  $return
         );
     }
 
