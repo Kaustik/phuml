@@ -44,6 +44,35 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($class2, $extends);
     }
 
+    public function testExtendAndNoUse()
+    {
+        $this->givenFiles(['Child/TestChildClassWithoutUse.php']);
+        $this->whenParsed();
+        /** @var \plPhpClass $class */
+        $class = $this->structure['\Test\Fixtures\Child\TestChildClassWithoutUse'];
+        /** @var \plPhpClass $extends */
+        $extends = $class->extends;
+        /* @var \plPhpClass $class */
+        $class2 = $this->structure['\Test\Fixtures\TestClass'];
+
+        $this->assertEquals('\Test\Fixtures\TestClass', $extends->name);
+        $this->assertSame($class2, $extends);
+    }
+
+    public function testFunctionTypeHintWithUse()
+    {
+        $this->givenFiles(['TestClass.php']);
+        $this->whenParsed();
+
+        /** @var \plPhpClass $class */
+        $class = $this->structure['\Test\Fixtures\TestClass'];
+        /** @var \plPhpFunction $function */
+        $function = $class->functions[0];
+        /** @var \plPhpFunctionParameter $param */
+        $param = $function->params[0];
+        $this->assertEquals('\Test\Fixtures\Child\TestChildClass', $param->type);
+    }
+
     private function givenFiles($fileList)
     {
         $this->fileList = array_map(function ($element) {

@@ -10,6 +10,8 @@ class plStructureTokenparserGenerator extends plStructureGenerator
 
     private $parserStruct;
     private $lastToken;
+    
+    private $currentFullyQualifiedName;
 
 
     /**
@@ -72,6 +74,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             foreach ($tokens as $token) {
                 // Split into Simple and complex token
                 if (is_array($token) !== true) {
+                    $this->currentFullyQualifiedName = '';
                     switch ($token) {
                         case ',':
                             $this->comma();
@@ -379,40 +382,20 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 $this->namespace .= $token[1];
                 break;
             case T_IMPLEMENTS:
-                // Add interface to implements array
-                if ($token[0] != T_NS_SEPARATOR) {
-                    if (isset($this->parserStruct['use'][$token[1]])) {
-                        $name = $this->parserStruct['use'][$token[1]]->path;
-                    } else {
-                        $name = $token[1];
-                    }
-                    $this->parserStruct['implements'][] = $name;
-                }
-                // We do not reset the last token here, because 
-                // there might be multiple interfaces
-            break;
+                $this->parserStruct['implements'][] = $this->getNameFromToken($token);
+                break;
             case T_EXTENDS:
-                if ($token[0] != T_NS_SEPARATOR) {
-                    if (isset($this->parserStruct['use'][$token[1]])) {
-                        $name = $this->parserStruct['use'][$token[1]]->path;
-                    } else {
-                        $name = $token[1];
-                    }
-                    $this->parserStruct['extends'] = $name;
-                }
-                $this->lastToken = null;
-            break;
+                $this->parserStruct['extends'] = $this->getNameFromToken($token);
+                break;
             case T_FUNCTION:
-                // Add the current function only if there is no function name already
-                // Because if we know the function name already this is a type hint
                 if ($this->parserStruct['function'] === null) {
                     // Function name
                     $this->parserStruct['function'] = $token[1];
                 } else {
                     // Type hint
-                    $this->parserStruct['typehint'] = $token[1];
+                    $this->parserStruct['typehint'] = $this->getNameFromToken($token);
                 }
-            break;
+                break;
             case T_CLASS:
                 // Set the class name
                 $this->parserStruct['class'] = $token[1];
@@ -671,6 +654,22 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             $interface->extends = array_key_exists($interface->extends, $this->interfaces)
                                  ? $this->interfaces[$interface->extends]
                                  : ($this->interfaces[$interface->extends] = new plPhpInterface($interface->extends));
+        }
+    }
+
+    /**
+     * @param $token
+     * @return string
+     */
+    private function getNameFromToken($token)
+    {
+        if (isset($this->parserStruct['use'][$token[1]])) {
+            $name = $this->parserStruct['use'][$token[1]]->path;
+            return $name;
+        } else {
+            $this->currentFullyQualifiedName .= $token[1];
+            $name = $this->currentFullyQualifiedName;
+            return $name;
         }
     }
 }
