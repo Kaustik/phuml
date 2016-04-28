@@ -10,8 +10,13 @@ class plStructureTokenparserGenerator extends plStructureGenerator
 
     private $parserStruct;
     private $lastToken;
-    
+
+    /**
+     * @var string
+     */
     private $currentFullyQualifiedName;
+    
+    private $currentInterfaceName;
 
 
     /**
@@ -75,6 +80,10 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 // Split into Simple and complex token
                 if (is_array($token) !== true) {
                     $this->currentFullyQualifiedName = '';
+                    if ($this->currentInterfaceName) {
+                        $this->parserStruct['implements'][] = $this->currentInterfaceName;
+                        $this->currentInterfaceName = '';
+                    }
                     switch ($token) {
                         case ',':
                             $this->comma();
@@ -382,7 +391,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 $this->namespace .= $token[1];
                 break;
             case T_IMPLEMENTS:
-                $this->parserStruct['implements'][] = $this->getNameFromToken($token);
+                $this->currentInterfaceName .= $this->getNameFromToken($token);
                 break;
             case T_EXTENDS:
                 $this->parserStruct['extends'] = $this->getNameFromToken($token);
