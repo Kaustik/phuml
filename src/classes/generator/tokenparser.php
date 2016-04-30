@@ -576,7 +576,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                     $function[0],
                     $function[1],
                     $params,
-                    $this->getReturnFromDocBlock($function[3])
+                    $this->getReturnTypeHintFromDocBlock($function[3])
                 );
             }
             $interface = new plPhpInterface(
@@ -607,7 +607,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                     $function[0],
                     $function[1],
                     $params,
-                    $this->getReturnFromDocBlock($function[3])
+                    $this->getReturnTypeHintFromDocBlock($function[3])
                 );
             }
             foreach ($this->parserStruct['attributes'] as $attribute) {
@@ -694,7 +694,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
      *
      * @return TypeHintList
      */
-    public function getReturnFromDocBlock($docBlock)
+    public function getReturnTypeHintFromDocBlock($docBlock)
     {
         $matches = [];
         preg_match('/.*@return *(.*).*/', $docBlock, $matches);
