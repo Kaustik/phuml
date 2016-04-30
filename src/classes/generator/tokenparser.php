@@ -1,5 +1,7 @@
 <?php
 
+use Phuml\Generator\TypeHint;
+use Phuml\Generator\TypeHintList;
 use Phuml\Generator\UseStatement;
 
 class plStructureTokenparserGenerator extends plStructureGenerator
@@ -15,15 +17,14 @@ class plStructureTokenparserGenerator extends plStructureGenerator
      * @var string
      */
     private $currentFullyQualifiedName;
-    
-    private $currentInterfaceName;
 
+    private $currentInterfaceName;
 
     /**
      * @var UseStatement
      */
     private $currentUse;
-    
+
     public function __construct()
     {
         $this->initGlobalAttributes();
@@ -52,7 +53,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             'extends' => null,
             'modifier' => 'public',
             'docblock' => null,
-            'use' => []
+            'use' => [],
         );
 
         $this->lastToken = array();
@@ -65,6 +66,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
 
     /**
      * @param array $files
+     *
      * @return array
      */
     public function createStructure(array $files)
@@ -193,7 +195,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                         case T_NS_SEPARATOR:
                             $this->t_string($token);
                             break;
-                        
+
                         case T_USE:
                             $this->t_use($token);
                             break;
@@ -638,7 +640,6 @@ class plStructureTokenparserGenerator extends plStructureGenerator
             $this->classes[$class->name] = $class;
             $this->initParserAttributes();
         }
-
     }
 
     private function fixObjectConnections()
@@ -671,36 +672,51 @@ class plStructureTokenparserGenerator extends plStructureGenerator
 
     /**
      * @param $token
+     *
      * @return string
      */
     private function getNameFromToken($token)
     {
         if (isset($this->parserStruct['use'][$token[1]])) {
             $name = $this->parserStruct['use'][$token[1]]->path;
+
             return $name;
         } else {
             $this->currentFullyQualifiedName .= $token[1];
             $name = $this->currentFullyQualifiedName;
+
             return $name;
         }
     }
 
     /**
-     * @param $docBlock
-     * @return string|void
+     * @param string $docBlock
+     *
+     * @return TypeHintList
      */
     public function getReturnFromDocBlock($docBlock)
     {
         $matches = [];
-        preg_match('/.*@return (.*).*/', $docBlock, $matches);
+        preg_match('/.*@return *(.*).*/', $docBlock, $matches);
+        $typeHintList = [];
         if (isset($matches[1])) {
-            $class = $matches[1];
-            if (isset($this->parserStruct['use'][$class])) {
-                return $this->parserStruct['use'][$class]->path;
+            $return = $matches[1];
+            $classes = explode('|', $return);
+            foreach ($classes as $class) {
+                if (substr($class, -2, 2) == '[]') {
+                    $className = substr($class, 0, -2);
+                    $isArrayTypeHint = true;
+                } else {
+                    $className = $class;
+                    $isArrayTypeHint = false;
+                }
+                if (isset($this->parserStruct['use'][$className])) {
+                    $className = $this->parserStruct['use'][$class]->path;
+                }
+                $typeHintList[] = new TypeHint($className, $isArrayTypeHint);
             }
-            return $class;
-        } else {
-            return null;
         }
+
+        return new TypeHintList($typeHintList);
     }
 }

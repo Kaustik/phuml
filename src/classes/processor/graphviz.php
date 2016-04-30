@@ -1,5 +1,7 @@
 <?php
 
+use Phuml\Generator\TypeHintList;
+
 class plGraphvizProcessor extends plProcessor 
 {
     private $properties;
@@ -318,8 +320,8 @@ class plGraphvizProcessor extends plProcessor
     private function getFunctionsModifier($o)
     {
         $functions = array();
+        /** @var plPhpFunction $function */
         foreach ($o->functions as $function) {
-            $return = '';
             if ($function->return) {
                 $return = ' : '.$function->return;
             }
@@ -366,14 +368,17 @@ class plGraphvizProcessor extends plProcessor
     private function getReturnAssociationDefinition($o, $associations)
     {
         $def = '';
+        /** @var plPhpFunction $function */
         foreach ($o->functions as $function) {
             if ($this->options->createAssociations === false) {
                 continue;
             }
-            if ($function->return) {
-                if (array_key_exists($function->return, $this->structure) && !array_key_exists(strtolower($function->return), $associations)) {
+            $typeHintList = $function->return->getTypeHints(); 
+            foreach ($typeHintList as $typeHint) {
+                $className = $typeHint->getClassName();
+                if (array_key_exists($className, $this->structure) && !array_key_exists(strtolower($className), $associations)) {
                     $def .= $this->createNodeRelation(
-                        $this->getUniqueId($this->structure[$function->return]),
+                        $this->getUniqueId($this->structure[$className]),
                         $this->getUniqueId($o),
                         array(
                             'dir' => 'back',
@@ -381,7 +386,7 @@ class plGraphvizProcessor extends plProcessor
                             'style' => 'dashed',
                         )
                     );
-                    $associations[strtolower($function->return)] = true;
+                    $associations[strtolower($className)] = true;
                 }
             }
         }

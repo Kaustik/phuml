@@ -1,0 +1,46 @@
+<?php
+
+namespace Test;
+
+class DocBlockParserTest extends \PHPUnit_Framework_TestCase
+{
+
+    public function testClass()
+    {
+        $tokenparserGenerator = new \plStructureTokenparserGenerator();
+        $docBlock="@return Class";
+        $typeHintList = $tokenparserGenerator->getReturnFromDocBlock($docBlock);
+        $typeHint = $typeHintList->getTypeHints()[0];
+        $this->assertEquals('Class', $typeHint->getClassName());
+        $this->assertFalse($typeHint->isIsArrayOfClass());
+        $this->assertEquals('Class', $typeHintList);
+    }
+    
+    public function testClassArray()
+    {
+        $tokenparserGenerator = new \plStructureTokenparserGenerator();
+        $docBlock="@return Class[]";
+        $typeHintList = $tokenparserGenerator->getReturnFromDocBlock($docBlock);
+        $typeHint = $typeHintList->getTypeHints()[0];
+        $this->assertEquals('Class', $typeHint->getClassName());
+        $this->assertTrue($typeHint->isIsArrayOfClass());
+        $this->assertEquals('Class[]', $typeHintList);
+    }
+
+    public function testClassAndArray()
+    {
+        $tokenparserGenerator = new \plStructureTokenparserGenerator();
+        $docBlock="@return Class[]|array";
+        $typeHintList = $tokenparserGenerator->getReturnFromDocBlock($docBlock);
+        $typeHint = $typeHintList->getTypeHints()[0];
+        $this->assertEquals('Class', $typeHint->getClassName());
+        $this->assertTrue($typeHint->isIsArrayOfClass());
+        
+        $typeHint = $typeHintList->getTypeHints()[1];
+        $this->assertEquals('array', $typeHint->getClassName());
+        $this->assertFalse($typeHint->isIsArrayOfClass());
+        
+        $this->assertEquals('Class[]|array', $typeHintList);
+    }
+    
+}
