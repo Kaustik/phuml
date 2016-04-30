@@ -5,7 +5,7 @@ namespace Test;
 class DocBlockParserTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function ntestReturnClass()
+    public function testReturnClass()
     {
         $tokenparserGenerator = new \plStructureTokenparserGenerator();
         $docBlock="@return Class";
@@ -16,7 +16,7 @@ class DocBlockParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Class', $typeHintList);
     }
     
-    public function ntestReturnClassArray()
+    public function testReturnClassArray()
     {
         $tokenparserGenerator = new \plStructureTokenparserGenerator();
         $docBlock="@return Class[]";
@@ -27,7 +27,7 @@ class DocBlockParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Class[]', $typeHintList);
     }
 
-    public function ntestReturnClassArrayAndArray()
+    public function testReturnClassArrayAndArray()
     {
         $tokenparserGenerator = new \plStructureTokenparserGenerator();
         $docBlock="@return Class[]|array";
