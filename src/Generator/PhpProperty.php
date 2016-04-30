@@ -4,8 +4,8 @@ namespace Phuml\Generator;
 
 class PhpProperty
 {
-
-    public function getFormattedName(){
+    public function getFormattedName()
+    {
         $namespace = $this->namespace;
         if (!empty($namespace) && strlen($namespace) > 1) {
             $namespace .= '\\';
