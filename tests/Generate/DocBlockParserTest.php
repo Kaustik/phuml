@@ -5,7 +5,7 @@ namespace Test;
 class DocBlockParserTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testClass()
+    public function ntestReturnClass()
     {
         $tokenparserGenerator = new \plStructureTokenparserGenerator();
         $docBlock="@return Class";
@@ -16,7 +16,7 @@ class DocBlockParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Class', $typeHintList);
     }
     
-    public function testClassArray()
+    public function ntestReturnClassArray()
     {
         $tokenparserGenerator = new \plStructureTokenparserGenerator();
         $docBlock="@return Class[]";
@@ -27,7 +27,7 @@ class DocBlockParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Class[]', $typeHintList);
     }
 
-    public function testClassAndArray()
+    public function ntestReturnClassArrayAndArray()
     {
         $tokenparserGenerator = new \plStructureTokenparserGenerator();
         $docBlock="@return Class[]|array";
@@ -41,6 +41,17 @@ class DocBlockParserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($typeHint->isIsArrayOfClass());
         
         $this->assertEquals('Class[]|array', $typeHintList);
+    }
+
+    public function testParamClassArray()
+    {
+        $tokenparserGenerator = new \plStructureTokenparserGenerator();
+        $docBlock="@param Class[] testParam";
+        $typeHintList = $tokenparserGenerator->getParameterTypeHintFromDocBlock($docBlock, 'testParam');
+        $typeHint = $typeHintList->getTypeHints()[0];
+        $this->assertEquals('Class', $typeHint->getClassName());
+        $this->assertTrue($typeHint->isIsArrayOfClass());
+        $this->assertEquals('Class[]', $typeHintList);
     }
     
 }

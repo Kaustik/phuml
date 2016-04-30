@@ -698,25 +698,48 @@ class plStructureTokenparserGenerator extends plStructureGenerator
     {
         $matches = [];
         preg_match('/.*@return *(.*).*/', $docBlock, $matches);
-        $typeHintList = [];
         if (isset($matches[1])) {
-            $return = $matches[1];
-            $classes = explode('|', $return);
-            foreach ($classes as $class) {
-                if (substr($class, -2, 2) == '[]') {
-                    $className = substr($class, 0, -2);
-                    $isArrayTypeHint = true;
-                } else {
-                    $className = $class;
-                    $isArrayTypeHint = false;
-                }
-                if (isset($this->parserStruct['use'][$className])) {
-                    $className = $this->parserStruct['use'][$class]->path;
-                }
-                $typeHintList[] = new TypeHint($className, $isArrayTypeHint);
-            }
+            return $this->getTypeHintListFrom($matches[1]);
         }
+        return new TypeHintList([]);
+    }
 
+    /**
+     * @param string $docBlock
+     * @param string $param
+     * @return TypeHintList
+     */
+    public function getParameterTypeHintFromDocBlock($docBlock, $param)
+    {
+        $matches = [];
+        preg_match('/.*@param *(.*) .*'.$param.'.*/', $docBlock, $matches);
+        if (isset($matches[1])) {
+            return $this->getTypeHintListFrom($matches[1]);
+        }
+        return new TypeHintList([]);
+    }
+
+    /**
+     * @param string $typeHint
+     * @return TypeHintList
+     */
+    private function getTypeHintListFrom($typeHint)
+    {
+        $typeHintList = [];
+        $classes = explode('|', $typeHint);
+        foreach ($classes as $class) {
+            if (substr($class, -2, 2) == '[]') {
+                $className = substr($class, 0, -2);
+                $isArrayTypeHint = true;
+            } else {
+                $className = $class;
+                $isArrayTypeHint = false;
+            }
+            if (isset($this->parserStruct['use'][$className])) {
+                $className = $this->parserStruct['use'][$class]->path;
+            }
+            $typeHintList[] = new TypeHint($className, $isArrayTypeHint);
+        }
         return new TypeHintList($typeHintList);
     }
 }
