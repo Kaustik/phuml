@@ -81,6 +81,9 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         /** @var \plPhpInterface $interface */
         $interface = $this->structure['\Test\Fixtures\Interfaces\TestInterface'];
         $type = $interface->functions[0]->params[0]->type;
+        $this->assertEquals('\AbstractTest[]', (string)$type);
+
+        $type = $interface->functions[1]->params[0]->type;
         $this->assertEquals('TestInterface[]|array', (string)$type);
     }
 

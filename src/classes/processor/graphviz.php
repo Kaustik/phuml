@@ -131,7 +131,7 @@ class plGraphvizProcessor extends plProcessor
 
         // First we need to create the needed data arrays
         $name = $o->name;
-
+        
         $associations = [];
         $functions = $this->getFunctionsModifier($o);
         $def .= $this->getParametersAssociationDefinition($o, $associations);
@@ -177,6 +177,10 @@ class plGraphvizProcessor extends plProcessor
                  : ( '-' ) );
     }
 
+    /**
+     * @param plPhpFunctionParameter[] $params
+     * @return string
+     */
     private function getParamRepresentation( $params ) 
     {
         if ( count( $params ) === 0 ) 
@@ -188,8 +192,7 @@ class plGraphvizProcessor extends plProcessor
         $lineLength = 0;
         for( $i = 0; $i<count( $params ); $i++ ) 
         {
-            if ( $params[$i]->type !== null ) 
-            {
+            if (count($params[$i]->type->getTypeHints())) {
                 $representation .= $params[$i]->type . ' ';
             }
 
@@ -338,22 +341,26 @@ class plGraphvizProcessor extends plProcessor
     private function getParametersAssociationDefinition($o, $associations)
     {
         $def = '';
+        /** @var plPhpFunction $function */
         foreach ($o->functions as $function) {
             if ($this->options->createAssociations === false) {
                 continue;
             }
             foreach ($function->params as $param) {
-                if ($param->type !== null && array_key_exists($param->type, $this->structure) && !array_key_exists(strtolower($param->type), $associations)) {
-                    $def .= $this->createNodeRelation(
-                        $this->getUniqueId($this->structure[$param->type]),
-                        $this->getUniqueId($o),
-                        array(
-                            'dir' => 'back',
-                            'arrowtail' => 'none',
-                            'style' => 'dashed',
-                        )
-                    );
-                    $associations[strtolower($param->type)] = true;
+                foreach ($param->type->getTypeHints() as $typeHint) {
+                    $typeName = $typeHint->getClassName();
+                    if ($typeName !== null && array_key_exists($typeName, $this->structure) && !array_key_exists(strtolower($typeName), $associations)) {
+                        $def .= $this->createNodeRelation(
+                            $this->getUniqueId($this->structure[$typeName]),
+                            $this->getUniqueId($o),
+                            array(
+                                'dir' => 'back',
+                                'arrowtail' => 'none',
+                                'style' => 'dashed',
+                            )
+                        );
+                        $associations[strtolower($typeName)] = true;
+                    }
                 }
             }
         }
