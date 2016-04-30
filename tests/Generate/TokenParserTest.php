@@ -73,6 +73,17 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('\Test\Fixtures\Child\TestChildClass', $param->type);
     }
 
+    public function testInheritParamTypeHint()
+    {
+        $this->givenFiles(['Interfaces/TestInterface.php']);
+        $this->whenParsed();
+
+        /** @var \plPhpInterface $interface */
+        $interface = $this->structure['\Test\Fixtures\Interfaces\TestInterface'];
+        $type = $interface->functions[0]->params[0]->type;
+        $this->assertEquals('TestInterface[]|array', (string)$type);
+    }
+
     private function givenFiles($fileList)
     {
         $this->fileList = array_map(function ($element) {

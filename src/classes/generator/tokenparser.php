@@ -570,7 +570,11 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 // Create the needed parameter objects
                 $params = array();
                 foreach ($function[2] as $param) {
-                    $params[] = new plPhpFunctionParameter($param[1], $param[0]);
+                    $typeHintList = $this->getParameterTypeHintFromDocBlock($function[3], $param[0])->getTypeHints();
+                    if (!is_null($param[0])) {
+                        $typeHintList[] = new TypeHint($param[0], false);
+                    }
+                    $params[] = new plPhpFunctionParameter($param[1], new TypeHintList($typeHintList));
                 }
                 $functions[] = new plPhpFunction(
                     $function[0],
@@ -601,7 +605,11 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 // Create the needed parameter objects
                 $params = array();
                 foreach ($function[2] as $param) {
-                    $params[] = new plPhpFunctionParameter($param[1], $param[0]);
+                    $typeHintList = $this->getParameterTypeHintFromDocBlock($function[3], $param[0])->getTypeHints();
+                    if (!is_null($param[0])) {
+                        $typeHintList[] = new TypeHint($param[0], false);
+                    }
+                    $params[] = new plPhpFunctionParameter($param[1], new TypeHintList($typeHintList));
                 }
                 $functions[] = new plPhpFunction(
                     $function[0],

@@ -13,7 +13,7 @@ class plPhpInterface extends PhpProperty
      */
     public $extends;
     /**
-     * @var array
+     * @var plPhpFunction[]
      */
     public $functions;
     /**

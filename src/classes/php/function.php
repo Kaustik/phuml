@@ -12,9 +12,14 @@ class plPhpFunction
     public $return;
 
     /**
+     * @var plPhpFunctionParameter[]
+     */
+    public $params;
+
+    /**
      * @param string $name
      * @param $modifier
-     * @param array $params
+     * @param plPhpFunctionParameter[] $params
      * @param TypeHintList $return
      */
     public function __construct($name, $modifier, array $params, TypeHintList $return)
@@ -22,8 +27,8 @@ class plPhpFunction
         $this->properties = array(
             'name' => $name,
             'modifier' => $modifier,
-            'params' => $params,
         );
+        $this->params = $params;
         $this->return = $return;
     }
 

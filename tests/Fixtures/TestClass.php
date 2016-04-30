@@ -10,10 +10,15 @@ class TestClass implements TestInterface
 {
     /**
      * @param TestChildClass $testChildClass
+     *
      * @return TestChildClassWithoutUse
      */
     public function testFunction(TestChildClass $testChildClass)
     {
         return new TestChildClassWithoutUse();
+    }
+
+    public function testArrayParam(array $testParam)
+    {
     }
 }
