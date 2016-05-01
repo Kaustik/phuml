@@ -570,7 +570,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 // Create the needed parameter objects
                 $params = array();
                 foreach ($function[2] as $param) {
-                    $typeHintList = $this->getParameterTypeHintFromDocBlock($function[3], $param[0])->getTypeHints();
+                    $typeHintList = $this->getParameterTypeHintFromDocBlock($function[3], $param[1])->getTypeHints();
                     if (!is_null($param[0])) {
                         $typeHintList[] = new TypeHint($param[0], false);
                     }
@@ -605,7 +605,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 // Create the needed parameter objects
                 $params = array();
                 foreach ($function[2] as $param) {
-                    $typeHintList = $this->getParameterTypeHintFromDocBlock($function[3], $param[0])->getTypeHints();
+                    $typeHintList = $this->getParameterTypeHintFromDocBlock($function[3], $param[1])->getTypeHints();
                     if (!is_null($param[0])) {
                         $typeHintList[] = new TypeHint($param[0], false);
                     }
@@ -720,6 +720,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
     public function getParameterTypeHintFromDocBlock($docBlock, $param)
     {
         $matches = [];
+        $param = str_replace('$', '\$', $param);
         preg_match('/.*@param *(.*) .*'.$param.'.*/', $docBlock, $matches);
         if (isset($matches[1])) {
             return $this->getTypeHintListFrom($matches[1]);

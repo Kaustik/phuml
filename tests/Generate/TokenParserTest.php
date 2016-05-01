@@ -81,10 +81,24 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         /** @var \plPhpInterface $interface */
         $interface = $this->structure['\Test\Fixtures\Interfaces\TestInterface'];
         $type = $interface->functions[0]->params[0]->type;
-        $this->assertEquals('\AbstractTest[]', (string)$type);
+        $this->assertEquals('\AbstractTest[]', (string) $type);
 
         $type = $interface->functions[1]->params[0]->type;
-        $this->assertEquals('TestInterface[]|array', (string)$type);
+        $this->assertEquals('TestInterface[]|array', (string) $type);
+    }
+
+    /**
+     * @group dev
+     */
+    public function testGlobalInterface()
+    {
+        $this->givenFiles(['GlobalInterface.php']);
+        $this->whenParsed();
+
+        /** @var \plPhpInterface $interface */
+        $interface = $this->structure['\GlobalInterface'];
+        $type = $interface->functions[0]->params[0]->type;
+        $this->assertEquals('\plPhpInterface[]', (string) $type);
     }
 
     private function givenFiles($fileList)

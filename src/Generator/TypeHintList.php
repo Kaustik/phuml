@@ -17,6 +17,20 @@ class TypeHintList
     public function __construct(array $typeHints)
     {
         $this->typeHints = $typeHints;
+        $this->filterOutDuplicates();
+    }
+
+    private function filterOutDuplicates()
+    {
+        $existingAlready = [];
+        $filteredList = [];
+        foreach ($this->typeHints as $typeHint) {
+            if (!isset($existingAlready[$typeHint->getClassName()])) {
+                $filteredList[] = $typeHint;
+                $existingAlready[$typeHint->getClassName()] = true;
+            }
+        }
+        $this->typeHints = $filteredList;
     }
 
     /**

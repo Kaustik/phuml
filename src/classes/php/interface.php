@@ -33,12 +33,6 @@ class plPhpInterface extends PhpProperty
         $extends = null,
         $namespace = ''
     ) {
-        $this->properties = array(
-            'name' => $name,
-            'functions' => $functions,
-            'extends' => $extends,
-            'namespace' => $namespace,
-        );
         $this->extends = $extends;
         $this->functions = $functions;
         $this->name = $name;
