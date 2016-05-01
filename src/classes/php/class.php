@@ -10,7 +10,7 @@ class plPhpClass extends PhpProperty
     public $name;
     
     /**
-     * @var null|string
+     * @var plPhpClass|string
      */
     public $extends;
 
