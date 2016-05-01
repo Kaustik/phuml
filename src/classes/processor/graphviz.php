@@ -12,9 +12,15 @@ class plGraphvizProcessor extends plProcessor
 
     public $options;
 
+    /**
+     * @var bool[] object name as key
+     */
+    private $associations;
+
     public function __construct() 
     {
         $this->options   = new plGraphvizProcessorOptions();
+        $this->associations = [];
 
         $this->structure = null;
         $this->output    = null;
@@ -46,10 +52,18 @@ class plGraphvizProcessor extends plProcessor
             if ( $object instanceof plPhpClass ) 
             {
                 $this->output .= $this->getClassDefinition( $object );
-            } 
-            else if ( $object instanceof plPhpInterface ) 
+            } elseif ( $object instanceof plPhpInterface ) 
             {
                 $this->output .= $this->getInterfaceDefinition( $object );
+            }
+        }
+
+        foreach( $this->structure as $object )
+        {
+            if ($object instanceof plPhpClass) {
+                $this->output .= $this->getClassAssociations($object);
+            } elseif ($object instanceof plPhpInterface) {
+                $this->output .= $this->getInterfaceAssociations($object);
             }
         }
 
@@ -58,24 +72,24 @@ class plGraphvizProcessor extends plProcessor
         return $this->output;
     }
 
-    private function getClassDefinition( $o ) 
+    /**
+     * @param \plPhpClass $class
+     * @return string
+     */
+    private function getClassDefinition(\plPhpClass $class)
     {
         $def = '';
 
         // First we need to create the needed data arrays
-        $name = $o->name;
+        $name = $class->name;
 
-        $attributes = $this->getAttributesModifers($o);
-        $associations = $this->getAttributesAssociations($o);
-        $def .= $this->getAttributesAssociationDefinition($o, $associations);
+        $attributes = $this->getAttributesModifers($class);
 
-        $functions = $this->getFunctionsModifier($o);
-        $def .= $this->getParametersAssociationDefinition($o, $associations);
-        $def .= $this->getReturnAssociationDefinition($o, $associations);
+        $functions = $this->getFunctionsModifier($class);
 
         // Create the node
         $def .= $this->createNode( 
-            $this->getUniqueId( $o ),
+            $this->getUniqueId( $class ),
             array(
                 'label' => $this->createClassLabel( $name, $attributes, $functions ),
                 'shape' => 'plaintext',
@@ -83,17 +97,17 @@ class plGraphvizProcessor extends plProcessor
         );
 
         // Create class inheritance relation
-        if ( $o->extends !== null ) 
+        if ( $class->extends !== null ) 
         {
             // Check if we need an "external" class node
-            if ( in_array( $o->extends, $this->structure ) !== true ) 
+            if ( in_array( $class->extends, $this->structure ) !== true ) 
             {
-                $def .= $this->getClassDefinition( $o->extends );
+                $def .= $this->getClassDefinition( $class->extends );
             }
 
             $def .= $this->createNodeRelation( 
-                $this->getUniqueId( $o->extends ),
-                $this->getUniqueId( $o ),
+                $this->getUniqueId( $class->extends ),
+                $this->getUniqueId( $class ),
                 array( 
                     'dir'       => 'back',
                     'arrowtail' => 'empty',
@@ -103,7 +117,7 @@ class plGraphvizProcessor extends plProcessor
         }
 
         // Create class implements relation
-        foreach( $o->implements as $interface ) 
+        foreach($class->implements as $interface ) 
         {
             // Check if we need an "external" interface node
             if ( in_array( $interface, $this->structure ) !== true ) 
@@ -113,7 +127,7 @@ class plGraphvizProcessor extends plProcessor
 
             $def .= $this->createNodeRelation( 
                 $this->getUniqueId( $interface ),
-                $this->getUniqueId( $o ),
+                $this->getUniqueId( $class ),
                 array( 
                     'dir'       => 'back',
                     'arrowtail' => 'normal',
@@ -125,22 +139,40 @@ class plGraphvizProcessor extends plProcessor
         return $def;
     }
 
+    /**
+     * @param plPhpClass $class
+     * @return string
+     */
+    public function getClassAssociations(plPhpClass $class)
+    {
+        $def = $this->getAttributesAssociationDefinition($class);
+        $def .= $this->getParametersAssociationDefinition($class);
+        $def .= $this->getReturnAssociationDefinition($class);
+        return $def;
+    }
+
+    public function getInterfaceAssociations(plPhpInterface $interface)
+    {
+        $def = $this->getParametersAssociationDefinition($interface);
+        $def .= $this->getReturnAssociationDefinition($interface);
+        return $def;
+    }
+
     private function getInterfaceDefinition( $o ) 
     {
         $def = '';
 
         // First we need to create the needed data arrays
         $name = $o->name;
-        
-        $associations = [];
+
+        $attributes = [];
         $functions = $this->getFunctionsModifier($o);
-        $def .= $this->getParametersAssociationDefinition($o, $associations);
 
         // Create the node
         $def .= $this->createNode( 
             $this->getUniqueId( $o ),
             array(
-                'label' => $this->createInterfaceLabel( $name, $associations, $functions ),
+                'label' => $this->createInterfaceLabel( $name, $attributes, $functions ),
                 'shape' => 'plaintext',
             )
         );
@@ -335,10 +367,9 @@ class plGraphvizProcessor extends plProcessor
 
     /**
      * @param $o
-     * @param array $associations
      * @return string
      */
-    private function getParametersAssociationDefinition($o, $associations)
+    private function getParametersAssociationDefinition($o)
     {
         $def = '';
         /** @var plPhpFunction $function */
@@ -349,7 +380,7 @@ class plGraphvizProcessor extends plProcessor
             foreach ($function->params as $param) {
                 foreach ($param->type->getTypeHints() as $typeHint) {
                     $typeName = $typeHint->getClassName();
-                    if ($typeName !== null && array_key_exists($typeName, $this->structure) && !array_key_exists(strtolower($typeName), $associations)) {
+                    if ($typeName !== null && array_key_exists($typeName, $this->structure) && !array_key_exists(strtolower($typeName), $this->associations)) {
                         $def .= $this->createNodeRelation(
                             $this->getUniqueId($this->structure[$typeName]),
                             $this->getUniqueId($o),
@@ -359,7 +390,7 @@ class plGraphvizProcessor extends plProcessor
                                 'style' => 'dashed',
                             )
                         );
-                        $associations[strtolower($typeName)] = true;
+                        $this->associations[strtolower($typeName)] = true;
                     }
                 }
             }
@@ -369,10 +400,9 @@ class plGraphvizProcessor extends plProcessor
 
     /**
      * @param $o
-     * @param array $associations
      * @return string
      */
-    private function getReturnAssociationDefinition($o, $associations)
+    private function getReturnAssociationDefinition($o)
     {
         $def = '';
         /** @var plPhpFunction $function */
@@ -383,7 +413,7 @@ class plGraphvizProcessor extends plProcessor
             $typeHintList = $function->return->getTypeHints(); 
             foreach ($typeHintList as $typeHint) {
                 $className = $typeHint->getClassName();
-                if (array_key_exists($className, $this->structure) && !array_key_exists(strtolower($className), $associations)) {
+                if (array_key_exists($className, $this->structure) && !array_key_exists(strtolower($className), $this->associations)) {
                     $def .= $this->createNodeRelation(
                         $this->getUniqueId($this->structure[$className]),
                         $this->getUniqueId($o),
@@ -393,7 +423,7 @@ class plGraphvizProcessor extends plProcessor
                             'style' => 'dashed',
                         )
                     );
-                    $associations[strtolower($className)] = true;
+                    $this->associations[strtolower($className)] = true;
                 }
             }
         }
@@ -417,11 +447,9 @@ class plGraphvizProcessor extends plProcessor
 
     /**
      * @param $o
-     * @param $associations
-     * @param $def
      * @return string
      */
-    private function getAttributesAssociationDefinition($o, $associations)
+    private function getAttributesAssociationDefinition($o)
     {
         $def = '';
         foreach ($o->attributes as $attribute) {
@@ -431,7 +459,7 @@ class plGraphvizProcessor extends plProcessor
             }
 
             // Create associations if the attribute type is set
-            if ($attribute->type !== null && array_key_exists($attribute->type, $this->structure) && !array_key_exists(strtolower($attribute->type), $associations)) {
+            if ($attribute->type !== null && array_key_exists($attribute->type, $this->structure) && !array_key_exists(strtolower($attribute->type), $this->associations)) {
                 $def .= $this->createNodeRelation(
                     $this->getUniqueId($this->structure[$attribute->type]),
                     $this->getUniqueId($o),
@@ -441,28 +469,9 @@ class plGraphvizProcessor extends plProcessor
                         'style' => 'dashed',
                     )
                 );
+                $this->associations[strtolower($attribute->type)] = true;
             }
         }
         return $def;
-    }
-
-    /**
-     * @param $o
-     * @return array
-     */
-    private function getAttributesAssociations($o)
-    {
-        $associations = array();
-        foreach ($o->attributes as $attribute) {
-            if ($this->options->createAssociations === false) {
-                continue;
-            }
-            if ($attribute->type !== null && array_key_exists($attribute->type, $this->structure) &&
-                !array_key_exists(strtolower($attribute->type), $associations)
-            ) {
-                $associations[strtolower($attribute->type)] = true;
-            }
-        }
-        return $associations;
     }
 }
