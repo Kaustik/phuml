@@ -364,17 +364,19 @@ class plGraphvizProcessor extends plProcessor
             foreach ($function->params as $param) {
                 foreach ($param->type->getTypeHints() as $typeHint) {
                     $typeName = $typeHint->getClassName();
-                    if ($typeName !== null && array_key_exists($typeName, $this->structure) && !array_key_exists(strtolower($typeName), $this->associations)) {
+                    if ($typeName !== null && array_key_exists($typeName, $this->structure) &&
+                        !$this->existAssociaton($typeName, $o->name)
+                    ) {
                         $def .= $this->createNodeRelation(
                             $this->getUniqueId($this->structure[$typeName]),
                             $this->getUniqueId($o),
                             array(
                                 'dir' => 'back',
-                                'arrowtail' => 'none',
+                                'arrowtail' => 'vee',
                                 'style' => 'dashed',
                             )
                         );
-                        $this->associations[strtolower($typeName)] = true;
+                        $this->storeAssociaton($typeName, $o->name);
                     }
                 }
             }
@@ -399,17 +401,18 @@ class plGraphvizProcessor extends plProcessor
             $typeHintList = $function->return->getTypeHints();
             foreach ($typeHintList as $typeHint) {
                 $className = $typeHint->getClassName();
-                if (array_key_exists($className, $this->structure) && !array_key_exists(strtolower($className), $this->associations)) {
+                if (array_key_exists($className, $this->structure) &&
+                    !$this->existAssociaton($className, $o->name)) {
                     $def .= $this->createNodeRelation(
                         $this->getUniqueId($this->structure[$className]),
                         $this->getUniqueId($o),
                         array(
                             'dir' => 'back',
-                            'arrowtail' => 'none',
+                            'arrowtail' => 'vee',
                             'style' => 'dashed',
                         )
                     );
-                    $this->associations[strtolower($className)] = true;
+                    $this->storeAssociaton($className, $o->name);
                 }
             }
         }
@@ -437,7 +440,7 @@ class plGraphvizProcessor extends plProcessor
      *
      * @return string
      */
-    private function getAttributesAssociationDefinition($o)
+    private function getAttributesAssociationDefinition(plPhpClass $o)
     {
         $def = '';
         foreach ($o->attributes as $attribute) {
@@ -447,20 +450,45 @@ class plGraphvizProcessor extends plProcessor
             }
 
             // Create associations if the attribute type is set
-            if ($attribute->type !== null && array_key_exists($attribute->type, $this->structure) && !array_key_exists(strtolower($attribute->type), $this->associations)) {
+            if ($attribute->type !== null && array_key_exists($attribute->type, $this->structure) &&
+                !$this->existAssociaton($attribute->type, $o->name)
+            ) {
                 $def .= $this->createNodeRelation(
                     $this->getUniqueId($this->structure[$attribute->type]),
                     $this->getUniqueId($o),
                     array(
                         'dir' => 'back',
-                        'arrowtail' => 'none',
+                        'arrowtail' => 'vee',
                         'style' => 'dashed',
                     )
                 );
-                $this->associations[strtolower($attribute->type)] = true;
+                $this->storeAssociaton($attribute->type, $o->name);
             }
         }
 
         return $def;
+    }
+
+
+    /**
+     * @param string $object1
+     * @param string $object2
+     */
+    private function storeAssociaton($object1, $object2)
+    {
+        $this->associations[$object1.'-'.$object2] = true;
+    }
+
+    /**
+     * @param string $object1
+     * @param string $object2
+     * @return bool
+     */
+    private function existAssociaton($object1, $object2)
+    {
+        if (isset($this->associations[$object1.'-'.$object2])) {
+            return true;
+        }
+        return false;
     }
 }
