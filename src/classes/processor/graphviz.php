@@ -51,9 +51,11 @@ class plGraphvizProcessor extends plProcessor
                 $this->output .= $this->getInterfaceDefinition($object);
             }
         }
+        
 
         foreach ($this->structure as $object) {
             if ($object instanceof plPhpClass) {
+                $this->output .= $this->getClassExtendAndImplement($object);
                 $this->output .= $this->getClassAssociations($object);
             } elseif ($object instanceof plPhpInterface) {
                 $this->output .= $this->getInterfaceAssociations($object);
@@ -89,42 +91,6 @@ class plGraphvizProcessor extends plProcessor
                 'shape' => 'plaintext',
             )
         );
-
-        // Create class inheritance relation
-        if ($class->extends !== null) {
-            // Check if we need an "external" class node
-            if (in_array($class->extends, $this->structure) !== true) {
-                $def .= $this->getClassDefinition($class->extends);
-            }
-
-            $def .= $this->createNodeRelation(
-                $this->getUniqueId($class->extends),
-                $this->getUniqueId($class),
-                array(
-                    'dir' => 'back',
-                    'arrowtail' => 'empty',
-                    'style' => 'solid',
-                )
-            );
-        }
-
-        // Create class implements relation
-        foreach ($class->implements as $interface) {
-            // Check if we need an "external" interface node
-            if (in_array($interface, $this->structure) !== true) {
-                $def .= $this->getInterfaceDefinition($interface);
-            }
-
-            $def .= $this->createNodeRelation(
-                $this->getUniqueId($interface),
-                $this->getUniqueId($class),
-                array(
-                    'dir' => 'back',
-                    'arrowtail' => 'normal',
-                    'style' => 'dashed',
-                )
-            );
-        }
 
         return $def;
     }
@@ -490,5 +456,49 @@ class plGraphvizProcessor extends plProcessor
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param plPhpClass $class
+     * @return string
+     */
+    private function getClassExtendAndImplement(\plPhpClass $class)
+    {
+        $def = '';
+        if ($class->extends !== null) {
+            // Check if we need an "external" class node
+            if (in_array($class->extends, $this->structure) !== true) {
+                $def .= $this->getClassDefinition($class->extends);
+            }
+
+            $def .= $this->createNodeRelation(
+                $this->getUniqueId($class->extends),
+                $this->getUniqueId($class),
+                array(
+                    'dir' => 'back',
+                    'arrowtail' => 'empty',
+                    'style' => 'solid',
+                )
+            );
+        }
+
+        // Create class implements relation
+        foreach ($class->implements as $interface) {
+            // Check if we need an "external" interface node
+            if (in_array($interface, $this->structure) !== true) {
+                $def .= $this->getInterfaceDefinition($interface);
+            }
+
+            $def .= $this->createNodeRelation(
+                $this->getUniqueId($interface),
+                $this->getUniqueId($class),
+                array(
+                    'dir' => 'back',
+                    'arrowtail' => 'normal',
+                    'style' => 'dashed',
+                )
+            );
+        }
+        return $def;
     }
 }
