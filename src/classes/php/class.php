@@ -24,7 +24,7 @@ class plPhpClass extends PhpProperty
      */
     public $functions;
     /**
-     * @var array
+     * @var plPhpInterface[]|string[]
      */
     public $implements;
     /**
