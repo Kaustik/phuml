@@ -394,7 +394,7 @@ class plStructureTokenparserGenerator extends plStructureGenerator
                 $this->namespace .= $token[1];
                 break;
             case T_IMPLEMENTS:
-                $this->currentInterfaceName .= $this->getNameFromToken($token);
+                $this->currentInterfaceName = $this->getNameFromToken($token);
                 break;
             case T_EXTENDS:
                 $this->parserStruct['extends'] = $this->getNameFromToken($token);

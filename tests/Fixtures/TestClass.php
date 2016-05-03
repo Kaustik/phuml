@@ -6,7 +6,7 @@ use Test\Fixtures\Child\TestChildClass;
 use Test\Fixtures\Child\TestChildClassWithoutUse;
 use Test\Fixtures\Interfaces\TestInterface;
 
-class TestClass implements TestInterface
+class TestClass implements TestInterface, \GlobalInterface
 {
     /**
      * @param TestChildClass $testChildClass
