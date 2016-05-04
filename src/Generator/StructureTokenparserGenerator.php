@@ -9,7 +9,7 @@ use plPhpFunctionParameter;
 use plPhpInterface;
 use plStructureGenerator;
 
-class plStructureTokenparserGenerator extends plStructureGenerator
+class StructureTokenparserGenerator extends plStructureGenerator
 {
     private $namespace;
     private $classes;
