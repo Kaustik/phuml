@@ -439,7 +439,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         switch ($this->lastToken) {
             case null:
                 // New initial interface token
-                // Store the class or interface definition if there is any in the 
+                // Store the class or interface definition if there is any in the
                 // parser arrays ( There might be more than one class/interface per
                 // file )
                 $this->storeClassOrInterface();
@@ -457,7 +457,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         switch ($this->lastToken) {
             case null:
                 // New initial interface token
-                // Store the class or interface definition if there is any in the 
+                // Store the class or interface definition if there is any in the
                 // parser arrays ( There might be more than one class/interface per
                 // file )
                 $this->storeClassOrInterface();
@@ -713,27 +713,31 @@ class StructureTokenparserGenerator extends plStructureGenerator
         if (isset($matches[1])) {
             return $this->getTypeHintListFrom($matches[1]);
         }
+
         return new TypeHintList([]);
     }
 
     /**
      * @param string $docBlock
      * @param string $param
+     *
      * @return TypeHintList
      */
     public function getParameterTypeHintFromDocBlock($docBlock, $param)
     {
         $matches = [];
         $param = str_replace('$', '\$', $param);
-        preg_match('/.*@param *(.*) .*' . $param . '.*/', $docBlock, $matches);
+        preg_match('/.*@param *(.*) .*'.$param.'.*/', $docBlock, $matches);
         if (isset($matches[1])) {
             return $this->getTypeHintListFrom($matches[1]);
         }
+
         return new TypeHintList([]);
     }
 
     /**
      * @param string $typeHint
+     *
      * @return TypeHintList
      */
     private function getTypeHintListFrom($typeHint)
@@ -753,6 +757,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
             }
             $typeHintList[] = new TypeHint($className, $isArrayTypeHint);
         }
+
         return new TypeHintList($typeHintList);
     }
 }
