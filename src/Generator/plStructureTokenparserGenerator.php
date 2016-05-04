@@ -2,9 +2,6 @@
 
 namespace Phuml\Generator;
 
-use Phuml\Generator\TypeHint;
-use Phuml\Generator\TypeHintList;
-use Phuml\Generator\UseStatement;
 use plPhpAttribute;
 use plPhpClass;
 use plPhpFunction;
