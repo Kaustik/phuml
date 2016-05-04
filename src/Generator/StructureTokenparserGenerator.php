@@ -98,15 +98,15 @@ class StructureTokenparserGenerator extends plStructureGenerator
                             break;
 
                         case '(':
-                            $this->opening_bracket();
+                            $this->openingBracket();
                             break;
 
                         case ')':
-                            $this->closing_bracket();
+                            $this->closingBracket();
                             break;
 
                         case '=':
-                            $this->equal_sign();
+                            $this->equalSign();
                             break;
                         case ';':
                             if ($this->currentUse instanceof UseStatement) {
@@ -122,87 +122,87 @@ class StructureTokenparserGenerator extends plStructureGenerator
                 } elseif (is_array($token) === true) {
                     switch ($token[0]) {
                         case T_WHITESPACE:
-                            $this->t_whitespace($token);
+                            $this->tWhitespace($token);
                             break;
 
                         case T_FUNCTION:
-                            $this->t_function($token);
+                            $this->tFunction($token);
                             break;
 
                         case T_VAR:
-                            $this->t_var($token);
+                            $this->tVar($token);
                             break;
 
                         case T_VARIABLE:
-                            $this->t_variable($token);
+                            $this->tVariable($token);
                             break;
 
                         case T_ARRAY:
-                            $this->t_array($token);
+                            $this->tArray($token);
                             break;
 
                         case T_CONSTANT_ENCAPSED_STRING:
-                            $this->t_constant_encapsed_string($token);
+                            $this->tConstantEncapsedString($token);
                             break;
 
                         case T_LNUMBER:
-                            $this->t_lnumber($token);
+                            $this->tLnumber($token);
                             break;
 
                         case T_DNUMBER:
-                            $this->t_dnumber($token);
+                            $this->tDnumber($token);
                             break;
 
                         case T_PAAMAYIM_NEKUDOTAYIM:
-                            $this->t_paamayim_neukudotayim($token);
+                            $this->tPaamayimNeukudotayim($token);
                             break;
 
                         case T_STRING:
-                            $this->t_string($token);
+                            $this->tString($token);
                             break;
 
                         case T_INTERFACE:
-                            $this->t_interface($token);
+                            $this->tInterface($token);
                             break;
 
                         case T_CLASS:
-                            $this->t_class($token);
+                            $this->tClass($token);
                             break;
 
                         case T_IMPLEMENTS:
-                            $this->t_implements($token);
+                            $this->tImplements($token);
                             break;
 
                         case T_EXTENDS:
-                            $this->t_extends($token);
+                            $this->tExtends($token);
                             break;
 
                         case T_PUBLIC:
-                            $this->t_public($token);
+                            $this->tPublic($token);
                             break;
 
                         case T_PROTECTED:
-                            $this->t_protected($token);
+                            $this->tProtected($token);
                             break;
 
                         case T_PRIVATE:
-                            $this->t_private($token);
+                            $this->tPrivate($token);
                             break;
 
                         case T_DOC_COMMENT:
-                            $this->t_doc_comment($token);
+                            $this->tDocComment($token);
                             break;
 
                         case T_NAMESPACE:
-                            $this->t_namespace($token);
+                            $this->tNamespace($token);
                             break;
 
                         case T_NS_SEPARATOR:
-                            $this->t_string($token);
+                            $this->tString($token);
                             break;
 
                         case T_USE:
-                            $this->t_use($token);
+                            $this->tUse($token);
                             break;
                         default:
                             // Ignore everything else
@@ -234,12 +234,12 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function opening_bracket()
+    private function openingBracket()
     {
         // Ignore opening brackets
     }
 
-    private function closing_bracket()
+    private function closingBracket()
     {
         switch ($this->lastToken) {
             case T_FUNCTION:
@@ -269,7 +269,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function equal_sign()
+    private function equalSign()
     {
         switch ($this->lastToken) {
             case T_FUNCTION:
@@ -280,12 +280,12 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_whitespace($token)
+    private function tWhitespace($token)
     {
         // Ignore whitespaces
     }
 
-    private function t_function($token)
+    private function tFunction($token)
     {
         switch ($this->lastToken) {
             case null:
@@ -299,7 +299,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_var($token)
+    private function tVar($token)
     {
         switch ($this->lastToken) {
             case T_FUNCTION:
@@ -310,7 +310,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_variable($token)
+    private function tVariable($token)
     {
         switch ($this->lastToken) {
             case T_PUBLIC:
@@ -336,7 +336,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_array($token)
+    private function tArray($token)
     {
         switch ($this->lastToken) {
             case T_FUNCTION:
@@ -347,7 +347,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_constant_encapsed_string($token)
+    private function tConstantEncapsedString($token)
     {
         switch ($this->lastToken) {
             case T_FUNCTION:
@@ -358,7 +358,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_lnumber($token)
+    private function tLnumber($token)
     {
         switch ($this->lastToken) {
             case T_FUNCTION:
@@ -369,7 +369,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_dnumber($token)
+    private function tDnumber($token)
     {
         switch ($this->lastToken) {
             case T_FUNCTION:
@@ -380,7 +380,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_paamayim_neukudotayim($token)
+    private function tPaamayimNeukudotayim($token)
     {
         switch ($this->lastToken) {
             case T_FUNCTION:
@@ -391,7 +391,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_string($token)
+    private function tString($token)
     {
         switch ($this->lastToken) {
             case T_NAMESPACE:
@@ -434,7 +434,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_interface($token)
+    private function tInterface($token)
     {
         switch ($this->lastToken) {
             case null:
@@ -452,7 +452,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_class($token)
+    private function tClass($token)
     {
         switch ($this->lastToken) {
             case null:
@@ -470,7 +470,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_implements($token)
+    private function tImplements($token)
     {
         switch ($this->lastToken) {
             case null:
@@ -481,7 +481,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_extends($token)
+    private function tExtends($token)
     {
         switch ($this->lastToken) {
             case null:
@@ -492,19 +492,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_public($token)
-    {
-        switch ($this->lastToken) {
-            case null:
-                $this->lastToken = $token[0];
-                $this->parserStruct['modifier'] = $token[1];
-                break;
-            default:
-                $this->lastToken = null;
-        }
-    }
-
-    private function t_protected($token)
+    private function tPublic($token)
     {
         switch ($this->lastToken) {
             case null:
@@ -516,7 +504,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_private($token)
+    private function tProtected($token)
     {
         switch ($this->lastToken) {
             case null:
@@ -528,7 +516,19 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_doc_comment($token)
+    private function tPrivate($token)
+    {
+        switch ($this->lastToken) {
+            case null:
+                $this->lastToken = $token[0];
+                $this->parserStruct['modifier'] = $token[1];
+                break;
+            default:
+                $this->lastToken = null;
+        }
+    }
+
+    private function tDocComment($token)
     {
         switch ($this->lastToken) {
             case null:
@@ -540,7 +540,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_namespace($token)
+    private function tNamespace($token)
     {
         switch ($this->lastToken) {
             case null:
@@ -551,7 +551,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
         }
     }
 
-    private function t_use($token)
+    private function tUse($token)
     {
         switch ($this->lastToken) {
             case null:
