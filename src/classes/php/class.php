@@ -8,7 +8,7 @@ class plPhpClass extends PhpProperty
      * @var string
      */
     public $name;
-    
+
     /**
      * @var plPhpClass|string
      */
@@ -18,7 +18,7 @@ class plPhpClass extends PhpProperty
      * @var array
      */
     public $attributes;
-    
+
     /**
      * @var array
      */
@@ -34,9 +34,9 @@ class plPhpClass extends PhpProperty
 
     /**
      * @param string $name
-     * @param array $attributes
-     * @param array $functions
-     * @param array $implements
+     * @param array  $attributes
+     * @param array  $functions
+     * @param array  $implements
      * @param string $extends
      * @param string $namespace
      */
@@ -48,7 +48,6 @@ class plPhpClass extends PhpProperty
         $extends = null,
         $namespace = ''
     ) {
-        
         $this->name = $name;
         $this->attributes = $attributes;
         $this->extends = $extends;

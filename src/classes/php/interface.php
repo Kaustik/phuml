@@ -23,7 +23,7 @@ class plPhpInterface extends PhpProperty
 
     /**
      * @param string $name
-     * @param array $functions
+     * @param array  $functions
      * @param string $extends
      * @param string $namespace
      */

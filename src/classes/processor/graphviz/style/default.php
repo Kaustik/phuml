@@ -3,5 +3,3 @@
 class plGraphvizProcessorDefaultStyle extends plGraphvizProcessorStyle
 {
 }
-
-?>

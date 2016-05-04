@@ -1,39 +1,36 @@
 <?php
 
-class plNeatoProcessor extends plExternalCommandProcessor 
+class plNeatoProcessor extends plExternalCommandProcessor
 {
     public $options;
 
-    public function __construct() 
+    public function __construct()
     {
         $this->options = new plProcessorOptions();
     }
 
-    public function getInputTypes() 
+    public function getInputTypes()
     {
-        return array( 
+        return array(
             'text/dot',
         );
     }
 
-    public function getOutputType() 
+    public function getOutputType()
     {
         return 'image/png';
     }
 
-    public function execute( $infile, $outfile, $type ) 
+    public function execute($infile, $outfile, $type)
     {
         exec(
-            'neato -Tpng -o ' . escapeshellarg( $outfile ) . ' ' . escapeshellarg( $infile ),
+            'neato -Tpng -o '.escapeshellarg($outfile).' '.escapeshellarg($infile),
             $output,
             $return
         );
 
-        if ( $return !== 0 ) 
-        {
-            throw new plProcessorExternalExecutionException( $output );
+        if ($return !== 0) {
+            throw new plProcessorExternalExecutionException($output);
         }
     }
 }
-
-?>

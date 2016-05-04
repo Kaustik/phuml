@@ -20,7 +20,7 @@ class plPhpFunction
      * @param string $name
      * @param $modifier
      * @param plPhpFunctionParameter[] $params
-     * @param TypeHintList $return
+     * @param TypeHintList             $return
      */
     public function __construct($name, $modifier, array $params, TypeHintList $return)
     {

@@ -51,7 +51,6 @@ class plGraphvizProcessor extends plProcessor
                 $this->output .= $this->getInterfaceDefinition($object);
             }
         }
-        
 
         foreach ($this->structure as $object) {
             if ($object instanceof plPhpClass) {
@@ -435,7 +434,6 @@ class plGraphvizProcessor extends plProcessor
         return $def;
     }
 
-
     /**
      * @param string $object1
      * @param string $object2
@@ -448,6 +446,7 @@ class plGraphvizProcessor extends plProcessor
     /**
      * @param string $object1
      * @param string $object2
+     *
      * @return bool
      */
     private function existAssociaton($object1, $object2)
@@ -455,11 +454,13 @@ class plGraphvizProcessor extends plProcessor
         if (isset($this->associations[$object1.'-'.$object2])) {
             return true;
         }
+
         return false;
     }
 
     /**
      * @param plPhpClass $class
+     *
      * @return string
      */
     private function getClassExtendAndImplement(\plPhpClass $class)
@@ -499,6 +500,7 @@ class plGraphvizProcessor extends plProcessor
                 )
             );
         }
+
         return $def;
     }
 }
