@@ -119,7 +119,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
 
     private function whenParsed()
     {
-        $tokenparserGenerator = new \plStructureTokenparserGenerator();
+        $tokenparserGenerator = new \Phuml\Generator\plStructureTokenparserGenerator();
         $this->structure = $tokenparserGenerator->createStructure($this->fileList);
     }
 }
