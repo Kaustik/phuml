@@ -2,7 +2,7 @@
 
 namespace Phuml\Generator;
 
-use Phuml\Generator\plPhpAttribute;
+use Phuml\Generator\Attribute;
 use plPhpClass;
 use plPhpFunction;
 use plPhpFunctionParameter;
@@ -634,7 +634,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
                         $type = trim($matches[1]);
                     }
                 }
-                $attributes[] = new plPhpAttribute(
+                $attributes[] = new Attribute(
                     $attribute[0],
                     $attribute[1],
                     $type
