@@ -753,7 +753,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
                 $isArrayTypeHint = false;
             }
             if (isset($this->parserStruct['use'][$className])) {
-                $className = $this->parserStruct['use'][$class]->path;
+                $className = $this->parserStruct['use'][$className]->path;
             }
             $typeHintList[] = new TypeHint($className, $isArrayTypeHint);
         }

@@ -2,6 +2,8 @@
 
 namespace Test;
 
+use Phuml\Generator\StructureTokenparserGenerator;
+
 class TokenParserTest extends \PHPUnit_Framework_TestCase
 {
     private $fixturePath;
@@ -97,7 +99,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $interface = $this->structure['\GlobalInterface'];
         $this->assertEquals('\GlobalInterface', $interface->name);
         $type = $interface->functions[0]->params[0]->type;
-        $this->assertEquals('\plPhpInterface[]', (string) $type);
+        $this->assertEquals('\Phuml\Generator\PhpInterface[]', (string) $type);
     }
 
     public function testInheritGlobalInterface()
@@ -119,7 +121,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
 
     private function whenParsed()
     {
-        $tokenparserGenerator = new \Phuml\Generator\StructureTokenparserGenerator();
+        $tokenparserGenerator = new StructureTokenparserGenerator();
         $this->structure = $tokenparserGenerator->createStructure($this->fileList);
     }
 }
