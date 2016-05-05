@@ -1,6 +1,7 @@
 <?php
 
 use Phuml\Generator\PhpProperty;
+use Phuml\Generator\PhpFunction;
 
 class plPhpInterface extends PhpProperty
 {
@@ -13,7 +14,7 @@ class plPhpInterface extends PhpProperty
      */
     public $extends;
     /**
-     * @var plPhpFunction[]
+     * @var PhpFunction[]
      */
     public $functions;
     /**

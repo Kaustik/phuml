@@ -2,6 +2,7 @@
 
 
 use Phuml\Generator\PhpClass;
+use Phuml\Generator\PhpFunction;
 
 class plGraphvizProcessor extends plProcessor
 {
@@ -304,7 +305,7 @@ class plGraphvizProcessor extends plProcessor
     private function getFunctionsModifier($o)
     {
         $functions = array();
-        /** @var plPhpFunction $function */
+        /** @var PhpFunction $function */
         foreach ($o->functions as $function) {
             if ($function->return) {
                 $return = ' : '.$function->return;
@@ -323,7 +324,7 @@ class plGraphvizProcessor extends plProcessor
     private function getParametersAssociationDefinition($o)
     {
         $def = '';
-        /** @var plPhpFunction $function */
+        /** @var PhpFunction $function */
         foreach ($o->functions as $function) {
             if ($this->options->createAssociations === false) {
                 continue;
@@ -360,7 +361,7 @@ class plGraphvizProcessor extends plProcessor
     private function getReturnAssociationDefinition($o)
     {
         $def = '';
-        /** @var plPhpFunction $function */
+        /** @var PhpFunction $function */
         foreach ($o->functions as $function) {
             if ($this->options->createAssociations === false) {
                 continue;

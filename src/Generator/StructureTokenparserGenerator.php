@@ -4,7 +4,7 @@ namespace Phuml\Generator;
 
 use Phuml\Generator\Attribute;
 use Phuml\Generator\PhpClass;
-use plPhpFunction;
+use Phuml\Generator\PhpFunction;
 use plPhpFunctionParameter;
 use plPhpInterface;
 use plStructureGenerator;
@@ -581,7 +581,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
                     }
                     $params[] = new plPhpFunctionParameter($param[1], new TypeHintList($typeHintList));
                 }
-                $functions[] = new plPhpFunction(
+                $functions[] = new PhpFunction(
                     $function[0],
                     $function[1],
                     $params,
@@ -615,7 +615,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
                     }
                     $params[] = new plPhpFunctionParameter($param[1], new TypeHintList($typeHintList));
                 }
-                $functions[] = new plPhpFunction(
+                $functions[] = new PhpFunction(
                     $function[0],
                     $function[1],
                     $params,
