@@ -22,7 +22,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $this->givenFiles(['TestClass.php', 'Interfaces/TestInterface.php']);
         $this->whenParsed();
 
-        /** @var \plPhpClass $class */
+        /** @var \Phuml\Generator\PhpClass $class */
         $class = $this->structure['\Test\Fixtures\TestClass'];
         /* @var \plPhpInterface $class */
         $interface = $this->structure['\Test\Fixtures\Interfaces\TestInterface'];
@@ -33,11 +33,11 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
     {
         $this->givenFiles(['Child/TestChildClass.php']);
         $this->whenParsed();
-        /** @var \plPhpClass $class */
+        /** @var \Phuml\Generator\PhpClass $class */
         $class = $this->structure['\Test\Fixtures\Child\TestChildClass'];
-        /** @var \plPhpClass $extends */
+        /** @var \Phuml\Generator\PhpClass $extends */
         $extends = $class->extends;
-        /* @var \plPhpClass $class */
+        /* @var \Phuml\Generator\PhpClass $class */
         $class2 = $this->structure['\Test\Fixtures\TestClass'];
 
         $this->assertEquals('\Test\Fixtures\TestClass', $extends->name);
@@ -48,11 +48,11 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
     {
         $this->givenFiles(['Child/TestChildClassWithoutUse.php']);
         $this->whenParsed();
-        /** @var \plPhpClass $class */
+        /** @var \Phuml\Generator\PhpClass $class */
         $class = $this->structure['\Test\Fixtures\Child\TestChildClassWithoutUse'];
-        /** @var \plPhpClass $extends */
+        /** @var \Phuml\Generator\PhpClass $extends */
         $extends = $class->extends;
-        /* @var \plPhpClass $class */
+        /* @var \Phuml\Generator\PhpClass $class */
         $class2 = $this->structure['\Test\Fixtures\TestClass'];
 
         $this->assertEquals('\Test\Fixtures\TestClass', $extends->name);
@@ -64,7 +64,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $this->givenFiles(['TestClass.php']);
         $this->whenParsed();
 
-        /** @var \plPhpClass $class */
+        /** @var \Phuml\Generator\PhpClass $class */
         $class = $this->structure['\Test\Fixtures\TestClass'];
         /** @var \plPhpFunction $function */
         $function = $class->functions[0];
@@ -105,7 +105,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $this->givenFiles(['GlobalInterface.php', 'TestClass.php']);
         $this->whenParsed();
 
-        /** @var \plPhpClass $class */
+        /** @var \Phuml\Generator\PhpClass $class */
         $class = $this->structure['\Test\Fixtures\TestClass'];
         $this->assertEquals('\GlobalInterface', $class->implements[1]->name);
     }

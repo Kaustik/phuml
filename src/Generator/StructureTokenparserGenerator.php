@@ -3,7 +3,7 @@
 namespace Phuml\Generator;
 
 use Phuml\Generator\Attribute;
-use plPhpClass;
+use Phuml\Generator\PhpClass;
 use plPhpFunction;
 use plPhpFunctionParameter;
 use plPhpInterface;
@@ -640,7 +640,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
                     $type
                 );
             }
-            $class = new plPhpClass(
+            $class = new PhpClass(
                 $this->parserStruct['class'],
                 $attributes,
                 $functions,
@@ -670,7 +670,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
             }
             $class->extends = array_key_exists($class->extends, $this->classes)
                 ? $this->classes[$class->extends]
-                : ($this->classes[$class->extends] = new plPhpClass($class->extends));
+                : ($this->classes[$class->extends] = new PhpClass($class->extends));
         }
         foreach ($this->interfaces as $interface) {
             if ($interface->extends === null) {

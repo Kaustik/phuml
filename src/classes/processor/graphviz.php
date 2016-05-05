@@ -1,6 +1,8 @@
 <?php
 
 
+use Phuml\Generator\PhpClass;
+
 class plGraphvizProcessor extends plProcessor
 {
     private $output;
@@ -45,7 +47,7 @@ class plGraphvizProcessor extends plProcessor
         $this->output .= 'mindist = 0.6;'."\n";
 
         foreach ($this->structure as $object) {
-            if ($object instanceof plPhpClass) {
+            if ($object instanceof PhpClass) {
                 $this->output .= $this->getClassDefinition($object);
             } elseif ($object instanceof plPhpInterface) {
                 $this->output .= $this->getInterfaceDefinition($object);
@@ -53,7 +55,7 @@ class plGraphvizProcessor extends plProcessor
         }
 
         foreach ($this->structure as $object) {
-            if ($object instanceof plPhpClass) {
+            if ($object instanceof PhpClass) {
                 $this->output .= $this->getClassExtendAndImplement($object);
                 $this->output .= $this->getClassAssociations($object);
             } elseif ($object instanceof plPhpInterface) {
@@ -67,11 +69,11 @@ class plGraphvizProcessor extends plProcessor
     }
 
     /**
-     * @param \plPhpClass $class
+     * @param \Phuml\Generator\PhpClass $class
      *
      * @return string
      */
-    private function getClassDefinition(\plPhpClass $class)
+    private function getClassDefinition(\Phuml\Generator\PhpClass $class)
     {
         $def = '';
 
@@ -95,11 +97,11 @@ class plGraphvizProcessor extends plProcessor
     }
 
     /**
-     * @param plPhpClass $class
+     * @param PhpClass $class
      *
      * @return string
      */
-    public function getClassAssociations(plPhpClass $class)
+    public function getClassAssociations(PhpClass $class)
     {
         $def = $this->getAttributesAssociationDefinition($class);
         $def .= $this->getParametersAssociationDefinition($class);
@@ -405,7 +407,7 @@ class plGraphvizProcessor extends plProcessor
      *
      * @return string
      */
-    private function getAttributesAssociationDefinition(plPhpClass $o)
+    private function getAttributesAssociationDefinition(PhpClass $o)
     {
         $def = '';
         foreach ($o->attributes as $attribute) {
@@ -459,11 +461,11 @@ class plGraphvizProcessor extends plProcessor
     }
 
     /**
-     * @param plPhpClass $class
+     * @param PhpClass $class
      *
      * @return string
      */
-    private function getClassExtendAndImplement(\plPhpClass $class)
+    private function getClassExtendAndImplement(\Phuml\Generator\PhpClass $class)
     {
         $def = '';
         if ($class->extends !== null) {

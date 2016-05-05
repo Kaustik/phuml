@@ -1,7 +1,7 @@
 <?php
 
 return array( 
-    'plPhpClass'                => 'classes/php/class.php',
+    'Phuml\Generator\plPhpClass'                => 'classes/php/class.php',
     'plPhpFunction'             => 'classes/php/function.php',
     'plPhpInterface'            => 'classes/php/interface.php',
     'Phuml\Generator\plPhpAttribute'            => 'classes/php/attribute.php',

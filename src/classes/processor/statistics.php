@@ -1,5 +1,7 @@
 <?php
 
+use Phuml\Generator\PhpClass;
+
 class plStatisticsProcessor extends plProcessor
 {
     private $information;
@@ -44,7 +46,7 @@ class plStatisticsProcessor extends plProcessor
                 ++$this->information['interfaceCount'];
             }
 
-            if ($definition instanceof plPhpClass) {
+            if ($definition instanceof PhpClass) {
                 ++$this->information['classCount'];
 
                 foreach ($definition->attributes as $attribute) {
