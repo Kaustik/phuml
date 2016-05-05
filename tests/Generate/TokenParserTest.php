@@ -24,7 +24,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
 
         /** @var \Phuml\Generator\PhpClass $class */
         $class = $this->structure['\Test\Fixtures\TestClass'];
-        /* @var \plPhpInterface $class */
+        /* @var \Phuml\Generator\PhpInterface $class */
         $interface = $this->structure['\Test\Fixtures\Interfaces\TestInterface'];
         $this->assertSame($interface, $class->implements[0]);
     }
@@ -78,7 +78,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $this->givenFiles(['Interfaces/TestInterface.php']);
         $this->whenParsed();
 
-        /** @var \plPhpInterface $interface */
+        /** @var \Phuml\Generator\PhpInterface $interface */
         $interface = $this->structure['\Test\Fixtures\Interfaces\TestInterface'];
         $type = $interface->functions[0]->params[0]->type;
         $this->assertEquals('\AbstractTest[]', (string) $type);
@@ -93,7 +93,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $this->whenParsed();
 
 
-        /** @var \plPhpInterface $interface */
+        /** @var \Phuml\Generator\PhpInterface $interface */
         $interface = $this->structure['\GlobalInterface'];
         $this->assertEquals('\GlobalInterface', $interface->name);
         $type = $interface->functions[0]->params[0]->type;

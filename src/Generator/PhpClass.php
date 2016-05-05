@@ -2,7 +2,7 @@
 
 namespace Phuml\Generator;
 
-use plPhpInterface;
+use Phuml\Generator\PhpInterface;
 
 class PhpClass extends PhpProperty
 {
@@ -26,7 +26,7 @@ class PhpClass extends PhpProperty
      */
     public $functions;
     /**
-     * @var plPhpInterface[]|string[]
+     * @var PhpInterface[]|string[]
      */
     public $implements;
     /**

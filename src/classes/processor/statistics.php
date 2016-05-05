@@ -1,6 +1,7 @@
 <?php
 
 use Phuml\Generator\PhpClass;
+use Phuml\Generator\PhpInterface;
 
 class plStatisticsProcessor extends plProcessor
 {
@@ -42,7 +43,7 @@ class plStatisticsProcessor extends plProcessor
 
         // Loop through the classes and interfaces
         foreach ($input as $definition) {
-            if ($definition instanceof plPhpInterface) {
+            if ($definition instanceof PhpInterface) {
                 ++$this->information['interfaceCount'];
             }
 

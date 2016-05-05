@@ -6,7 +6,7 @@ use Phuml\Generator\Attribute;
 use Phuml\Generator\PhpClass;
 use Phuml\Generator\PhpFunction;
 use Phuml\Generator\PhpFunctionParameter;
-use plPhpInterface;
+use Phuml\Generator\PhpInterface;
 use plStructureGenerator;
 
 class StructureTokenparserGenerator extends plStructureGenerator
@@ -588,7 +588,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
                     $this->getReturnTypeHintFromDocBlock($function[3])
                 );
             }
-            $interface = new plPhpInterface(
+            $interface = new PhpInterface(
                 $this->parserStruct['interface'],
                 $functions,
                 $this->parserStruct['extends'],
@@ -661,7 +661,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
             foreach ($class->implements as $key => $impl) {
                 $implements[$key] = array_key_exists($impl, $this->interfaces)
                     ? $this->interfaces[$impl]
-                    : $this->interfaces[$impl] = new plPhpInterface($impl);
+                    : $this->interfaces[$impl] = new PhpInterface($impl);
             }
             $class->implements = $implements;
 
@@ -678,7 +678,7 @@ class StructureTokenparserGenerator extends plStructureGenerator
             }
             $interface->extends = array_key_exists($interface->extends, $this->interfaces)
                 ? $this->interfaces[$interface->extends]
-                : ($this->interfaces[$interface->extends] = new plPhpInterface($interface->extends));
+                : ($this->interfaces[$interface->extends] = new PhpInterface($interface->extends));
         }
     }
 

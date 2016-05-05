@@ -4,6 +4,7 @@
 use Phuml\Generator\PhpClass;
 use Phuml\Generator\PhpFunction;
 use Phuml\Generator\PhpFunctionParameter;
+use Phuml\Generator\PhpInterface;
 
 class plGraphvizProcessor extends plProcessor
 {
@@ -51,7 +52,7 @@ class plGraphvizProcessor extends plProcessor
         foreach ($this->structure as $object) {
             if ($object instanceof PhpClass) {
                 $this->output .= $this->getClassDefinition($object);
-            } elseif ($object instanceof plPhpInterface) {
+            } elseif ($object instanceof PhpInterface) {
                 $this->output .= $this->getInterfaceDefinition($object);
             }
         }
@@ -60,7 +61,7 @@ class plGraphvizProcessor extends plProcessor
             if ($object instanceof PhpClass) {
                 $this->output .= $this->getClassExtendAndImplement($object);
                 $this->output .= $this->getClassAssociations($object);
-            } elseif ($object instanceof plPhpInterface) {
+            } elseif ($object instanceof PhpInterface) {
                 $this->output .= $this->getInterfaceAssociations($object);
             }
         }
@@ -112,7 +113,7 @@ class plGraphvizProcessor extends plProcessor
         return $def;
     }
 
-    public function getInterfaceAssociations(plPhpInterface $interface)
+    public function getInterfaceAssociations(PhpInterface $interface)
     {
         $def = $this->getParametersAssociationDefinition($interface);
         $def .= $this->getReturnAssociationDefinition($interface);

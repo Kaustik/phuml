@@ -1,9 +1,11 @@
 <?php
 
+namespace Phuml\Generator;
+
 use Phuml\Generator\PhpProperty;
 use Phuml\Generator\PhpFunction;
 
-class plPhpInterface extends PhpProperty
+class PhpInterface extends PhpProperty
 {
     /**
      * @var string
@@ -24,7 +26,7 @@ class plPhpInterface extends PhpProperty
 
     /**
      * @param string $name
-     * @param array  $functions
+     * @param array $functions
      * @param string $extends
      * @param string $namespace
      */
@@ -33,7 +35,8 @@ class plPhpInterface extends PhpProperty
         $functions = array(),
         $extends = null,
         $namespace = ''
-    ) {
+    )
+    {
         $this->extends = $extends;
         $this->functions = $functions;
         $this->name = $name;
