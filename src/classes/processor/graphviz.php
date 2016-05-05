@@ -3,6 +3,7 @@
 
 use Phuml\Generator\PhpClass;
 use Phuml\Generator\PhpFunction;
+use Phuml\Generator\PhpFunctionParameter;
 
 class plGraphvizProcessor extends plProcessor
 {
@@ -169,7 +170,7 @@ class plGraphvizProcessor extends plProcessor
     }
 
     /**
-     * @param plPhpFunctionParameter[] $params
+     * @param PhpFunctionParameter[] $params
      *
      * @return string
      */

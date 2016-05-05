@@ -1,8 +1,8 @@
 <?php
 
-use Phuml\Generator\TypeHintList;
+namespace Phuml\Generator;
 
-class plPhpFunctionParameter
+class PhpFunctionParameter
 {
     /**
      * @var string
@@ -14,7 +14,7 @@ class plPhpFunctionParameter
     public $type;
 
     /**
-     * @param string       $name
+     * @param string $name
      * @param TypeHintList $type
      */
     public function __construct($name, TypeHintList $type)
