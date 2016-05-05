@@ -2,31 +2,30 @@
 
 class plPhpAttribute
 {
-    private $properties;
+    /**
+     * @var string
+     */
+    public $name;
 
-    public function __construct($name, $modifier = 'public', $type = null)
+    /**
+     * @var string
+     */
+    public $modifier;
+
+    /**
+     * @var string
+     */
+    public $type;
+
+    /**
+     * @param string $name
+     * @param string $modifier
+     * @param string $type
+     */
+    public function __construct($name, $modifier, $type)
     {
-        $this->properties = array(
-            'name' => $name,
-            'modifier' => $modifier,
-            'type' => $type,
-        );
-    }
-
-    public function __get($key)
-    {
-        if (!array_key_exists($key, $this->properties)) {
-            throw new plBasePropertyException($key, plBasePropertyException::READ);
-        }
-
-        return $this->properties[$key];
-    }
-
-    public function __set($key, $val)
-    {
-        if (!array_key_exists($key, $this->properties)) {
-            throw new plBasePropertyException($key, plBasePropertyException::WRITE);
-        }
-        $this->properties[$key] = $val;
+        $this->modifier = $modifier;
+        $this->name = $name;
+        $this->type = $type;
     }
 }
