@@ -2,7 +2,7 @@
 
 namespace Phuml\Generator;
 
-use plPhpAttribute;
+use Phuml\Generator\plPhpAttribute;
 use plPhpClass;
 use plPhpFunction;
 use plPhpFunctionParameter;
