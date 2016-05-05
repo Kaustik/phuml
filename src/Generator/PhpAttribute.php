@@ -2,7 +2,7 @@
 
 namespace Phuml\Generator;
 
-class Attribute
+class PhpAttribute
 {
     /**
      * @var string
