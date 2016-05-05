@@ -2,8 +2,6 @@
 
 namespace Phuml\Generator;
 
-use Phuml\Generator\PhpInterface;
-
 class PhpClass extends PhpProperty
 {
     /**
