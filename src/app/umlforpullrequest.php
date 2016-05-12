@@ -35,7 +35,7 @@ function generate()
 {
     $phuml = new plPhuml();
     $phuml->generator = plStructureGenerator::factory('tokenparser');
-    $options = getopt('t:p:f:'); //token pullrequestid filter
+    $options = getopt('t:p:f:o:'); //token pullrequestid filter
 
     if (isset($options['f'])) {
         $type = $options['f']; //test or user or empty string
@@ -53,6 +53,13 @@ function generate()
         $pullrequestId = $options['p'];
     } else {
         echo "pullrequestid token must be set";
+        exit;
+    }
+
+    if (isset($options['o'])) {
+        $outputFile = $options['o'];
+    } else {
+        echo "outputfile -o must be set";
         exit;
     }
     
@@ -83,7 +90,7 @@ function generate()
     $grProcessor->options->createAssociations = true;
     $phuml->addProcessor($grProcessor);
     $phuml->addProcessor(new plDotProcessor());
-    $phuml->generate('/srv/aiai/current/log/uml.png');
+    $phuml->generate($outputFile);
 }
 
 generate();
