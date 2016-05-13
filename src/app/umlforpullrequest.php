@@ -18,6 +18,10 @@ function getAffectedFilesForPullrequestAndPage($pullrequestId, $page, $token)
     /** @var stdClass[] $prFileList */
     $prFileList = json_decode($jsonResult);
 
+    if ($prFileList instanceof \stdClass) {
+        throw new \Exception("Github error: {$prFileList->message}");
+    }
+    
     $list = [];
     foreach ($prFileList as $file) {
         if ($file->status == 'removed') {
@@ -35,7 +39,7 @@ function generate()
 {
     $phuml = new plPhuml();
     $phuml->generator = plStructureGenerator::factory('tokenparser');
-    $options = getopt('t:p:f:o:'); //token pullrequestid filter
+    $options = getopt('t:p:f:o:b:'); //token pullrequestid filter
 
     if (isset($options['f'])) {
         $type = $options['f']; //test or user or empty string
@@ -62,7 +66,13 @@ function generate()
         echo "outputfile -o must be set";
         exit;
     }
-    
+
+    if (isset($options['b'])) {
+        $basepath = $options['b'];
+    } else {
+        echo "basepath -b must be set";
+        exit;
+    }
     $page = 1;
     $files = getAffectedFilesForPullrequestAndPage($pullrequestId, $page, $token);
     $allFiles = $files;
@@ -70,6 +80,10 @@ function generate()
         $page++;
         $files = getAffectedFilesForPullrequestAndPage($pullrequestId, $page, $token);
         $allFiles = array_merge($allFiles, $files);
+        if ($page > 10) {
+            echo "more than 10 pages. something wrong: $token $pullrequestId. Exiting";
+            return;
+        }
     }
     
     foreach ($allFiles as $file) {
@@ -84,7 +98,7 @@ function generate()
         if (substr($file, -8, 8) == 'Test.php' && $type == 'user') {
             continue;
         }
-        $phuml->addFile('/srv/aiai/current/'.$file);
+        $phuml->addFile($basepath.$file);
     }
     $grProcessor = new plGraphvizProcessor();
     $grProcessor->options->createAssociations = true;
