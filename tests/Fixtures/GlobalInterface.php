@@ -1,16 +1,19 @@
 <?php
 
 use Phuml\Generator\PhpInterface;
+use Test\Fixtures\Child\TestChildClass;
+use Test\Fixtures\Child\TestChildClassWithoutUse;
 
 interface GlobalInterface
 {
     /**
-     * @param \Phuml\Generator\PhpInterface[] $rules
+     * @param PhpInterface[] $rules
      */
-    public function __construct(array $rules);
+    public function otherFunction(array $rules);
 
     /**
-     * @return PhpInterface[]
+     * @param TestChildClass $testChildClass
+     * @return TestChildClassWithoutUse
      */
-    public function testFunction();
+    public function testFunction(TestChildClass $testChildClass);
 }

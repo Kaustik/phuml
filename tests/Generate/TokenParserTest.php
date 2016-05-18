@@ -69,7 +69,7 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         /** @var \Phuml\Generator\PhpClass $class */
         $class = $this->structure['\Test\Fixtures\TestClass'];
         /** @var \Phuml\Generator\PhpFunction $function */
-        $function = $class->functions[0];
+        $function = $class->functions[1];
         /** @var \Phuml\Generator\PhpFunctionParameter $param */
         $param = $function->params[0];
         $this->assertEquals('\Test\Fixtures\Child\TestChildClass', $param->type);
