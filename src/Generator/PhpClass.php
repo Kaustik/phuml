@@ -15,12 +15,12 @@ class PhpClass extends PhpProperty
     public $extends;
 
     /**
-     * @var array
+     * @var PhpAttribute[]|string
      */
     public $attributes;
 
     /**
-     * @var array
+     * @var PhpFunction[]|string
      */
     public $functions;
     /**
