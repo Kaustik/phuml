@@ -111,6 +111,9 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('\GlobalInterface', $class->implements[1]->name);
     }
 
+    /**
+     * @group dev
+     */
     public function testSameNamespace()
     {
         $this->givenFiles(['TestClassInSameNamespace.php', 'TestClass.php']);
@@ -122,9 +125,9 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $type = $class->functions[4]->params[0]->type;
         $this->assertEquals('\Test\Fixtures\TestClassInSameNamespace[]', (string) $type);
         $type = $class->functions[4]->return;
-        #$this->assertEquals('\Test\Fixtures\TestClassInSameNamespace', (string) $type);
+        $this->assertEquals('\Test\Fixtures\TestClassInSameNamespace', (string) $type);
         $type = $class->functions[5]->params[0]->type;
-        #$this->assertEquals('\Test\Fixtures\TestClassInSameNamespace', (string) $type);
+        $this->assertEquals('\Test\Fixtures\TestClassInSameNamespace', (string) $type);
     }
 
     private function givenFiles($fileList)

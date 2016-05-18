@@ -572,7 +572,8 @@ class StructureTokenparserGenerator extends plStructureGenerator
                 foreach ($function[2] as $param) {
                     $typeHintList = $this->getParameterTypeHintFromDocBlock($function[3], $param[1])->getTypeHints();
                     if (!is_null($param[0])) {
-                        $typeHintList[] = new TypeHint($param[0], false);
+                        $className = $this->getClassNameWithNameSpace($param[0]);
+                        $typeHintList[] = new TypeHint($className, false);
                     }
                     $params[] = new PhpFunctionParameter($param[1], new TypeHintList($typeHintList));
                 }
@@ -606,7 +607,8 @@ class StructureTokenparserGenerator extends plStructureGenerator
                 foreach ($function[2] as $param) {
                     $typeHintList = $this->getParameterTypeHintFromDocBlock($function[3], $param[1])->getTypeHints();
                     if (!is_null($param[0])) {
-                        $typeHintList[] = new TypeHint($param[0], false);
+                        $className = $this->getClassNameWithNameSpace($param[0]);
+                        $typeHintList[] = new TypeHint($className, false);
                     }
                     $params[] = new PhpFunctionParameter($param[1], new TypeHintList($typeHintList));
                 }
@@ -737,10 +739,6 @@ class StructureTokenparserGenerator extends plStructureGenerator
      */
     private function getTypeHintListFrom($typeHint)
     {
-        $nativeTypes = [
-            'bool',
-            'array',
-        ];
         $typeHintList = [];
         $classes = explode('|', $typeHint);
         foreach ($classes as $class) {
@@ -754,16 +752,27 @@ class StructureTokenparserGenerator extends plStructureGenerator
             if (isset($this->parserStruct['use'][$className])) {
                 $className = $this->parserStruct['use'][$className]->path;
             }
-            if (!in_array($className, $nativeTypes) &&
-                $this->namespace != '\\' &&
-                substr($className, 0, 1) != '\\'
-            ) {
-                //in same namespace and not global
-                $className = $this->namespace.'\\'.$className;
-            }
+            $className = $this->getClassNameWithNameSpace($className);
             $typeHintList[] = new TypeHint($className, $isArrayTypeHint);
         }
 
         return new TypeHintList($typeHintList);
+    }
+
+    private function getClassNameWithNameSpace($className)
+    {
+        $nativeTypes = [
+            'bool',
+            'array',
+        ];
+        if (!in_array($className, $nativeTypes) &&
+            $this->namespace != '\\' &&
+            substr($className, 0, 1) != '\\'
+        ) {
+            //in same namespace and not global
+            $className = $this->namespace.'\\'.$className;
+        }
+
+        return $className;
     }
 }
