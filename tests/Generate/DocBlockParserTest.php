@@ -2,11 +2,13 @@
 
 namespace Test;
 
+use Phuml\Generator\StructureTokenparserGenerator;
+
 class DocBlockParserTest extends \PHPUnit_Framework_TestCase
 {
     public function testReturnClass()
     {
-        $tokenparserGenerator = new \Phuml\Generator\StructureTokenparserGenerator();
+        $tokenparserGenerator = new StructureTokenparserGenerator();
         $docBlock = '@return Class';
         $typeHintList = $tokenparserGenerator->getReturnTypeHintFromDocBlock($docBlock);
         $typeHint = $typeHintList->getTypeHints()[0];
@@ -17,7 +19,7 @@ class DocBlockParserTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnClassArray()
     {
-        $tokenparserGenerator = new \Phuml\Generator\StructureTokenparserGenerator();
+        $tokenparserGenerator = new StructureTokenparserGenerator();
         $docBlock = '@return Class[]';
         $typeHintList = $tokenparserGenerator->getReturnTypeHintFromDocBlock($docBlock);
         $typeHint = $typeHintList->getTypeHints()[0];
@@ -28,7 +30,7 @@ class DocBlockParserTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnClassArrayAndArray()
     {
-        $tokenparserGenerator = new \Phuml\Generator\StructureTokenparserGenerator();
+        $tokenparserGenerator = new StructureTokenparserGenerator();
         $docBlock = '@return Class[]|array';
         $typeHintList = $tokenparserGenerator->getReturnTypeHintFromDocBlock($docBlock);
         $typeHint = $typeHintList->getTypeHints()[0];
@@ -44,7 +46,7 @@ class DocBlockParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParamClassArray()
     {
-        $tokenparserGenerator = new \Phuml\Generator\StructureTokenparserGenerator();
+        $tokenparserGenerator = new StructureTokenparserGenerator();
         $docBlock = '@param Class[] $testParam';
         $typeHintList = $tokenparserGenerator->getParameterTypeHintFromDocBlock($docBlock, '$testParam');
         $typeHint = $typeHintList->getTypeHints()[0];
@@ -55,7 +57,7 @@ class DocBlockParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParamGlobalClassArray()
     {
-        $tokenparserGenerator = new \Phuml\Generator\StructureTokenparserGenerator();
+        $tokenparserGenerator = new StructureTokenparserGenerator();
         $docBlock = '@param \Class[] $testParam';
         $typeHintList = $tokenparserGenerator->getParameterTypeHintFromDocBlock($docBlock, '$testParam');
         $typeHint = $typeHintList->getTypeHints()[0];

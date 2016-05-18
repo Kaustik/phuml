@@ -34,9 +34,9 @@ class PhpClass extends PhpProperty
 
     /**
      * @param string $name
-     * @param array $attributes
-     * @param array $functions
-     * @param array $implements
+     * @param array  $attributes
+     * @param array  $functions
+     * @param array  $implements
      * @param string $extends
      * @param string $namespace
      */
@@ -47,8 +47,7 @@ class PhpClass extends PhpProperty
         $implements = [],
         $extends = null,
         $namespace = ''
-    )
-    {
+    ) {
         $this->name = $name;
         $this->attributes = $attributes;
         $this->extends = $extends;

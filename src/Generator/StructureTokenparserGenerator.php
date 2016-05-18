@@ -2,11 +2,6 @@
 
 namespace Phuml\Generator;
 
-use Phuml\Generator\PhpAttribute;
-use Phuml\Generator\PhpClass;
-use Phuml\Generator\PhpFunction;
-use Phuml\Generator\PhpFunctionParameter;
-use Phuml\Generator\PhpInterface;
 use plStructureGenerator;
 
 class StructureTokenparserGenerator extends plStructureGenerator
@@ -742,6 +737,10 @@ class StructureTokenparserGenerator extends plStructureGenerator
      */
     private function getTypeHintListFrom($typeHint)
     {
+        $nativeTypes = [
+            'bool',
+            'array',
+        ];
         $typeHintList = [];
         $classes = explode('|', $typeHint);
         foreach ($classes as $class) {
@@ -754,6 +753,13 @@ class StructureTokenparserGenerator extends plStructureGenerator
             }
             if (isset($this->parserStruct['use'][$className])) {
                 $className = $this->parserStruct['use'][$className]->path;
+            }
+            if (!in_array($className, $nativeTypes) &&
+                $this->namespace != '\\' &&
+                substr($className, 0, 1) != '\\'
+            ) {
+                //in same namespace and not global
+                $className = $this->namespace.'\\'.$className;
             }
             $typeHintList[] = new TypeHint($className, $isArrayTypeHint);
         }

@@ -2,8 +2,6 @@
 
 namespace Phuml\Generator;
 
-use Phuml\Generator\PhpFunctionParameter;
-
 class PhpFunction
 {
     /**
@@ -27,10 +25,10 @@ class PhpFunction
     public $params;
 
     /**
-     * @param string $name
-     * @param string $modifier
+     * @param string                 $name
+     * @param string                 $modifier
      * @param PhpFunctionParameter[] $params
-     * @param TypeHintList $return
+     * @param TypeHintList           $return
      */
     public function __construct($name, $modifier, array $params, TypeHintList $return)
     {

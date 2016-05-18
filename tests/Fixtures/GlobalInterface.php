@@ -13,6 +13,7 @@ interface GlobalInterface
 
     /**
      * @param TestChildClass $testChildClass
+     *
      * @return TestChildClassWithoutUse
      */
     public function testFunction(TestChildClass $testChildClass);

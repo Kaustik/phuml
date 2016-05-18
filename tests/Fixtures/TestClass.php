@@ -31,6 +31,19 @@ class TestClass implements TestInterface, \GlobalInterface
      */
     public function otherFunction(array $rules)
     {
-        
+    }
+
+    /**
+     * @param TestClassInSameNamespace[] $classInSameNamespace
+     *
+     * @return TestClassInSameNamespace
+     */
+    public function testSameNamespace($classInSameNamespace)
+    {
+        return new TestClassInSameNamespace();
+    }
+
+    public function testMoreSameNamespace(TestClassInSameNamespace $classInSameNamespace)
+    {
     }
 }

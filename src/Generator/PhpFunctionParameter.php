@@ -14,7 +14,7 @@ class PhpFunctionParameter
     public $type;
 
     /**
-     * @param string $name
+     * @param string       $name
      * @param TypeHintList $type
      */
     public function __construct($name, TypeHintList $type)

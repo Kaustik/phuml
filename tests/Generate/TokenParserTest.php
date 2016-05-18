@@ -86,14 +86,13 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('\AbstractTest[]', (string) $type);
 
         $type = $interface->functions[1]->params[0]->type;
-        $this->assertEquals('TestInterface[]|array', (string) $type);
+        $this->assertEquals('\Test\Fixtures\Interfaces\TestInterface[]|array', (string) $type);
     }
 
     public function testGlobalInterface()
     {
         $this->givenFiles(['GlobalInterface.php']);
         $this->whenParsed();
-
 
         /** @var \Phuml\Generator\PhpInterface $interface */
         $interface = $this->structure['\GlobalInterface'];
@@ -110,6 +109,22 @@ class TokenParserTest extends \PHPUnit_Framework_TestCase
         /** @var \Phuml\Generator\PhpClass $class */
         $class = $this->structure['\Test\Fixtures\TestClass'];
         $this->assertEquals('\GlobalInterface', $class->implements[1]->name);
+    }
+
+    public function testSameNamespace()
+    {
+        $this->givenFiles(['TestClassInSameNamespace.php', 'TestClass.php']);
+        $this->whenParsed();
+
+        /** @var \Phuml\Generator\PhpClass $class */
+        $class = $this->structure['\Test\Fixtures\TestClass'];
+        $this->assertEquals('testSameNamespace', $class->functions[4]->name);
+        $type = $class->functions[4]->params[0]->type;
+        $this->assertEquals('\Test\Fixtures\TestClassInSameNamespace[]', (string) $type);
+        $type = $class->functions[4]->return;
+        #$this->assertEquals('\Test\Fixtures\TestClassInSameNamespace', (string) $type);
+        $type = $class->functions[5]->params[0]->type;
+        #$this->assertEquals('\Test\Fixtures\TestClassInSameNamespace', (string) $type);
     }
 
     private function givenFiles($fileList)
